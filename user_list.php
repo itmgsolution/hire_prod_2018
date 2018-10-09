@@ -1,0 +1,510 @@
+<?php
+
+	include "db_connect.php";
+	include "session_handler.php";
+	
+	if($_GET["mode"]=="search"){
+		$mode = "search";
+		
+	}elseif($_GET["mode"]=="letters"){
+		$mode = "letters";
+	}
+	
+	
+	//yoes 20141007 -- also check permission
+	if($sess_accesslevel == 1 ||  $sess_can_manage_user){	
+		//can pass		
+	}else{
+		//nope
+		header ("location: index.php");	
+	}
+	
+	
+	//yoes 20151025
+	if(strlen($_GET["user_enabled"])>0){	
+		$_POST[user_enabled] = $_GET["user_enabled"]*1;
+	
+	}
+	
+
+?>
+<?php include "header_html.php";?>
+                <td valign="top" style="padding-left:5px;">
+                	
+                    <h2 class="default_h1" style="margin:0; padding:0;"  >
+                    Users ทั้งหมด
+                    
+                    
+                  </h2>
+                   
+                    
+                   
+                    <div style="padding-top:10px; font-weight: bold;">
+                        
+                       ค้นหา users
+                        
+                   </div>
+                    
+                    
+                    <form method="post">
+                    <table style=" padding:10px 0 0px 0;">
+                    
+                    
+                    
+                    	<tr>
+                    	  <td bgcolor="#efefef">สถานะ: </td>
+                          <td >
+                          
+                          <?php 
+						  
+						  $ddl_user_enabled_show_blank = 1;
+						  include "ddl_user_enabled.php";
+						  
+						  ?>
+                          
+                          </td>
+                          <td colspan="2" ></td>
+                   	  </tr>
+                      
+                      
+                      
+                    	<tr>
+                        	
+                            
+                            
+                    	  <td bgcolor="#efefef">User name:  </td>
+                    	  <td>
+                          	                     <input type="text" name="user_name" value="<?php echo $_POST["user_name"];?>" />     </td>
+                        	<td >
+                          </td>
+                            <td>
+                               </td>
+                      </tr>
+                      
+                      <tr>
+                        	
+                            
+                            
+                    	 <td bgcolor="#efefef">
+                           ชื่อ:</td>
+                            <td>
+                                <input type="text" name="FirstName" value="<?php echo $_POST["FirstName"];?>" /> 
+                              </td>
+                        	<td bgcolor="#efefef">
+                           นามสกุล:</td>
+                            <td>
+                                <input type="text" name="LastName" value="<?php echo $_POST["LastName"];?>" /> 
+                                
+                                
+                                 </td>
+                      </tr>
+                      
+                    	<tr>
+                    	  <td bgcolor="#efefef">
+                          
+	                        ชนิดของ user:
+                          
+                          </td>
+                    	  <td>
+						  	<?php
+							
+								$do_show_company = 1;
+								include "ddl_access_level.php";
+								
+								?>
+                           </td>
+                          
+                          
+                          <td> </td>
+                          <td></td>
+                                  
+							                              
+                          
+                          
+                   	  </tr>
+                      
+                      
+                      
+                      	<tr>
+                    	  <td bgcolor="#efefef">ชื่อบริษัท / เลขที่บัญชีนายจ้าง <br />/ หน่วยงาน</td>
+                          <td colspan="3"><input type="text" name="Department" value="<?php echo $_POST["Department"];?>" style="width: 250px;" /></td>
+                          
+                          
+							                              
+                          
+                          
+                   	  </tr>
+                      	<tr>
+                      	  <td bgcolor="#efefef">เป็นเจ้าหน้าที่สถานประกอบการ<br />ภายใต้พื้นที่การทำงาน</td>
+                      	  <td colspan="3">
+                          
+                          
+                          
+                          <?php include "ddl_zone_list.php";?>
+                          
+                          
+                          
+                          </td>
+                   	    </tr>
+                        
+                    	<tr>
+                    	  <td colspan="6" align="right">
+                          
+                           
+                            <input type="submit" value="แสดง" name="mini_search"/>
+                            
+                            
+                          <hr />
+                          
+                          </td>
+                   	  </tr>
+                      
+                      
+                    </table>
+                    </form>
+                    
+                    
+                    <?php 
+					
+						//yoes 20141007 --> also set if this is not admin then can only see own's province
+							if(($sess_can_manage_user && $sess_meta) && $sess_accesslevel == 3){	
+								
+								$filter_sql = " 
+								
+									and 
+										(
+											user_meta = '$sess_meta'
+											or 
+											
+											(
+												accessLevel = 4
+												and
+												user_meta in (
+												
+													select cid from company where province	= '$sess_meta'							
+													
+												
+												)
+											)
+										)
+										
+										";
+							
+							}
+							
+							
+							
+							//yoes 20151021 ---< add more filter here
+							$input_fields = array(
+							
+								'user_enabled'
+								,'user_name'
+								,'FirstName'
+								,'LastName'
+								,'AccessLevel'
+								,'Department'
+							
+							);
+							
+							for($i = 0; $i < count($input_fields); $i++){
+								
+								if(strlen($_POST[$input_fields[$i]])>0){
+									
+									$use_condition = 1;
+									
+									
+									if($input_fields[$i] == "Department"){
+									
+										$filter_sql .= " and 
+															
+															(
+															
+																Department like '%".doCleanInput($_POST[$input_fields[$i]])."%'
+																or
+																CompanyCode like '%".doCleanInput($_POST[$input_fields[$i]])."%'
+																or
+																CompanyNameThai like '%".doCleanInput($_POST[$input_fields[$i]])."%'
+															
+															)
+															
+															
+															";
+										
+									}else{
+									
+										$filter_sql .= " and $input_fields[$i] like '%".doCleanInput($_POST[$input_fields[$i]])."%'";
+									
+									}
+									
+									
+								}
+							}	
+							
+							
+							//YOes 20160117 --> add zone filters here
+							if($_POST["zone_id"]){
+								
+								$my_zone = $_POST["zone_id"]*1;
+								
+								$zone_sql = "
+								
+									and
+									b.District in (
+								
+										select
+											district_name
+										from
+											districts
+										where
+											district_area_code
+											in (
+									
+												select
+													district_area_code
+												from
+													zone_district
+												where
+													zone_id = '$my_zone'
+											
+											)
+										
+									)
+								
+								
+								";
+								
+								$filter_sql .= $zone_sql;
+								
+							}
+					
+					
+					?>
+                    
+                    
+                    
+                    <?php 
+					
+					
+					//yoes 20161201 -- pmj only see Company's users
+					if($sess_accesslevel == 3){
+						
+						$filter_sql	.= " and a.AccessLevel = 4 ";
+						
+					}
+					
+					
+					?>
+                    
+                    
+                    
+                    <div style="padding:0 0 5px 0">
+	                    พบ users : <strong><?php 
+						
+						
+						echo getFirstItem("
+							select 
+								count(user_id) 
+							from 
+								users a
+								left outer join
+												company b on a.user_meta = b.cid
+								
+							where 
+								1=1 
+							
+							$filter_sql
+							
+							");
+						
+						
+						?></strong> คน
+                        
+                       
+                    </div>
+                    
+                    
+                    <?php if($sess_accesslevel == 1 || $sess_accesslevel == 2){ //yoes 20161201 -- only these ppl can add users?>
+                     <div style="padding:10px 0 10px 0"><a href="view_user.php?mode=add">+ เพิ่ม user ใหม่เข้าไปในระบบ</a></div>
+                     <?php }?>
+                    
+                    <table border="1"  cellspacing="0" cellpadding="5" style="border-collapse:collapse; ">
+                    	<tr bgcolor="#9C9A9C" align="center" >
+                        	
+           	  <td >
+                            	<div align="center"><span class="column_header">ลำดับที่</span> </div></td>
+                      <td>
+                            	<div align="center"><span class="column_header">User name</span> </div></td>
+                     	<!--
+                      <td>
+                            	<div align="center"><span class="column_header">Password</span> </div></td>
+                                -->
+                                
+                      <td>
+                            	<div align="center"><span class="column_header">ชนิดของ user</span> </div></td>
+                      <td>
+                            	<div align="center"><span class="column_header">ชื่อ-นามสกุล</span> </div></td>
+                      <td>
+                            	<div align="center"><span class="column_header">หน่วยงาน/สถานประกอบการ</span> </div></td>
+                      <td><div align="center"><span class="column_header">วันที่สมัคร</span></div></td>
+                      <td><div align="center"><span class="column_header">วันที่อนุมัติ/อนุมัติโดย</span></div></td>
+                      
+                      <td><div align="center"><span class="column_header">สถานะ</span></div></td>
+                             
+                          
+                           
+                          <?php if($sess_accesslevel == 1 || $sess_accesslevel == 2){ //yoes 20161201 -- only these ppl can delete users?>  
+                          <td><div align="center"><span class="column_header">ลบข้อมูล</span></div></td>
+                          <?php }?>
+                          
+                    	</tr>
+                        <?php
+											
+						
+						
+						$get_org_sql = "SELECT 
+											*
+										FROM 
+											users a
+											left outer join
+												company b on a.user_meta = b.cid
+										
+										where 1=1
+										
+										$filter_sql
+										
+										order by user_id asc
+										
+										";
+						//echo $get_org_sql;
+						
+						$org_result = mysql_query($get_org_sql);
+					
+						//total records 
+						$total_records = 0;
+					
+						while ($post_row = mysql_fetch_array($org_result)) {
+					
+							$total_records++;
+							
+						?>     
+                        <tr bgcolor="#ffffff" align="center" >
+                        	
+                       	  <td >
+                            <div align="center"><a href="view_user.php?id=<?php echo doCleanOutput($post_row["user_id"]);?>"><?php echo $total_records;?></a> </div></td>
+                            
+                      <td>
+                            	<a href="view_user.php?id=<?php echo doCleanOutput($post_row["user_id"]);?>"><?php echo ($post_row["user_name"]);?></a>                            </td>
+                            
+                            <!--<td>
+                            	<?php //echo ($post_row["user_password"]);?>  </td>-->
+                            
+                            <td>
+                            	<?php echo formatAccessLevel($post_row["AccessLevel"]);?>                            </td>
+                            <td>
+                            	<?php echo $post_row["FirstName"] ." ". $post_row["LastName"];?>                            </td>
+                            <td>
+                            	
+								
+								<?php 
+								
+									if($post_row["AccessLevel"] == 4){
+										
+										
+										$this_company_row = getFirstRow("select * from company where cid = '".$post_row["user_meta"]."'");
+										
+										
+										echo $this_company_row["CompanyCode"] . " - ". formatCompanyName($this_company_row["CompanyNameThai"] , $this_company_row["CompanyTypeCode"]);
+																				
+									}else{
+										
+										echo $post_row["Department"];
+										
+									}
+									
+								?>
+                                
+                                
+                           </td>
+                            <td>
+								<?php echo formatDateThai($post_row["user_created_date"],0,1); ?>
+                            </td>
+                            <td>
+                            	<?php echo formatDateThai($post_row["user_approved_date"],0,1); ?>
+                                
+                                <?php 
+								
+									if($post_row["user_approved_by"]){
+										echo " โดย <a href='view_user.php?id=$post_row[user_approved_by]'>".getFirstItem("select user_name from users where user_id = '$post_row[user_approved_by]'")."</a>";
+									}
+								
+								?>
+                                
+                            </td>
+                             <td>
+                             
+                             <?php echo getUserEnabledText($post_row["user_enabled"]); ?>
+                             
+                             </td>
+                           
+                         
+                              <?php if($sess_accesslevel == 1 || $sess_accesslevel == 2){ //yoes 20161201 -- only these ppl can delete users?>
+                            <td>
+                            
+                            
+                            
+                          
+                             <div align="center"><a href="scrp_delete_user.php?id=<?php echo doCleanOutput($post_row["user_id"]);?>" title="ลบข้อมูล" onclick="return confirm('คุณแน่ใจหรือว่าจะลบข้อมูล? การลบข้อมูลถือเป็นการสิ้นสุดและคุณจะไม่สามารถเรียกข้อมูลกลับมาได้');"><img src="decors/cross_icon.gif" border="0" /></a>                              </div>
+                            
+                             
+                             </td>
+                             
+                              <?php }?>
+                              
+                              
+                      </tr>
+                        <?php } //end loop to generate rows?>
+				  </table>
+                   
+                    
+                  
+              </td>
+			</tr>
+             
+             <tr>
+                <td align="right" colspan="2">
+                    <?php include "bottom_menu.php";?>
+                </td>
+            </tr>  
+            
+		</table>                            
+       
+        </td>
+    </tr>
+    
+</table>    
+
+</div><!--end page cell-->
+</td>
+</tr>
+</table>
+
+<script language="javascript">
+
+function checkOrUncheck(){
+	if(document.getElementById('chk_all').checked == true){
+		checkAll();
+	}else{
+		uncheckAll();
+	}
+}
+
+function checkAll(){
+	<?php echo $js_do_check; ?>
+}
+
+function uncheckAll(){
+	<?php echo $js_do_uncheck; ?>
+}
+</script>
+</body>
+</html>

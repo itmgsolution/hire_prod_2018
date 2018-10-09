@@ -1,0 +1,439 @@
+@CHARSET "UTF-8";
+
+#loader {
+     position:absolute;
+}
+#loader {
+    z-index:12600322;
+    background-color:#808080;
+    opacity:.4;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;           
+}
+
+#loader img{
+    opacity:.8;
+    z-index:12600323; 
+}
+
+table.grid-status-desc td:nth-child(2n){
+	padding-right: 10px;
+}
+
+table.nep-grid{
+	border-collapse:collapse;
+	border-spacing:0px;
+}
+
+table.nep-grid th{
+	color: #fff;
+	font-size:10pt !important;
+	text-align:center;
+	background-color: rgb(156, 154, 156);
+}
+
+table.nep-grid td{
+	background-color: #fff;
+	text-align: left;
+}
+
+
+table.nep-grid th, table.nep-grid td{
+	border-top: 1px solid gray;
+	border-left: 1px solid gray;
+	padding:5px 7px;	
+}
+
+table.nep-grid th:last-child, table.nep-grid td:last-child {
+	border-right: 1px solid #000;	
+}
+
+
+table.nep-grid th:first-child, table.nep-grid td:first-child{
+	border-left-color: #000;
+}
+
+table.nep-grid tr:first-child th{
+	border-top-color: #000;
+}
+
+
+table.nep-grid tr:last-child td{
+	border-bottom: 1px solid #000;	
+}
+
+table.nep-grid tr.edit-row td{
+	background-color: rgba(255, 255, 0, 0.23);
+}
+
+.content-block{
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+.add-link{
+	display: inline-block;
+	margin-bottom: 3px;
+}
+
+.litigation-icon{
+	background-color: #21b384;
+	display: inline-block;
+	border-radius:10px;
+	padding:3px 0px;
+	width: 20px;	
+	text-align: center;
+}
+
+.litigation-icon-red{
+	background-color: #CE0303;
+}
+
+.litigation-icon .fa{
+	color: #fff;
+}
+
+.icon{
+	border: 0px;
+	display: inline-block;
+	margin-right: 5px;
+	opacity:.7;
+}
+
+ .icon-16{
+ 	width:16px !important;
+  	height:16px !important;
+ 	background-size: 16px 16px !important;
+ }
+
+.icon:HOVER{
+	opacity:1;
+}
+
+.icon[disabled='disabled']:HOVER{
+	opacity:.7;
+	cursor: default;
+}
+
+ .icon-save{ 
+  	width:20px;
+  	height:20px;
+	background-image: url(../images/save_icon_24.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+.icon-add{ 
+  	width:20px;
+  	height:20px;
+	background-image: url(../images/round_plus_icon_24.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+.icon-edit{ 
+  	width:20px;
+  	height:20px;
+	background-image: url(../images/doc_edit_icon_24.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+.icon-cancel{ 
+  	width:20px;
+  	height:20px;
+	background-image: url(../images/cancel_icon_24.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+.icon-del{ 
+  	width:20px;
+  	height:20px;
+	background-image: url(../decors/cross_icon.gif);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+.icon-unlocksequestration{
+	width:20px;
+  	height:20px;
+	background-image: url(../images/padlock_open_icon&24.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+.icon-locksequestration{
+	width:20px;
+  	height:20px;
+	background-image: url(../images/padlock_closed_icon&24.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+.icon-view{
+	width:20px;
+  	height:20px;
+	background-image: url(../images/doc_lines_icon_24.png);
+	background-size: 20px 20px;
+	background-repeat: no-repeat;
+}
+
+textarea.control{
+	height: 70px;
+	width: 100%;
+}
+
+.checkbox-other-block{
+	text-align: top;
+	position: relative;
+}
+
+.checkbox-other-block > textarea.control{
+	width: 85%;
+	margin-left: 35px;
+}
+
+.checkbox-other-block > label{
+	position: absolute;
+	margin-left: 3px;
+	font-weight: normal;
+}
+
+.checkbox-other{
+	float: left;
+}
+
+
+.nep-grid .k-datepicker{
+	width: 110px;
+}
+
+
+.text-nowrap{
+	white-space: nowrap;
+}
+
+a.nep-button{
+	font-weight: normal;
+	color: #000;
+}
+
+.k-upload-button, .nep-button{
+	font-family: Arial,sans-serif;
+		
+	align-items: flex-start;
+    text-align: center;
+    cursor: default;
+    color: buttontext;
+    padding: 1px 6px;
+    border: 2px outset buttonface;
+    border-image-source: initial;
+    border-image-slice: initial;
+    border-image-width: initial;
+    border-image-outset: initial;
+    border-image-repeat: initial;
+    background-color: buttonface;
+    box-sizing: border-box;
+    
+    -webkit-appearance: push-button;
+    -webkit-user-select: none;
+    white-space: pre;
+}
+
+/*--kendo Updload--*/
+.k-widget.k-upload.k-header{
+	border-width: 0;
+	background-color: none;	
+}
+.k-upload-files {
+	line-height: normal;
+}
+
+.k-upload-files, .k-file{
+	border-width: 0px;
+}
+
+.file-link{
+	cursor: pointer;
+}
+
+.file-wrapper > .k-button{
+	position: relative;
+}
+
+.file-wrapper > .k-button > .k-icon{
+	margin-top: -2px;
+}
+
+.single-file .k-dropzone {
+    display:inline-block;
+    float:left;
+    
+}
+.single-file .k-upload-files {
+    display:inline-block;
+    float:left;
+    margin-top:2px;    
+}
+.multi-file .k-upload-files {
+    margin-top:5px;
+}
+
+.k-button {
+    display:inline-block;
+    position:relative;
+}
+.k-dropzone, .k-file {
+    position:relative;
+}
+
+.k-upload-button input {
+    position:absolute;
+    top:0;
+    right:0;
+    z-index:1;
+    opacity:0;
+    margin:0;
+    padding:0;
+    cursor:pointer;
+    
+}
+
+.k-file .file-link, .k-file .file-name{
+	font-weight: normal;
+}
+
+.k-file.k-file-error .file-link {
+    display:none
+}
+
+.k-file.k-file-success .file-name{
+    display:none;
+}
+
+span.extension-validate {
+    clear :both;
+    display : block;
+}
+
+.input-file-container .k-upload-button {
+    /*width: 76px;
+	height: 24px;*/
+}
+
+.k-upload .k-dropzone {
+    border:0 none;
+    padding:0;
+}
+
+.k-upload .k-dropzone em, strong.k-upload-status{
+    display:none;
+}
+
+.k-upload-files .k-button {
+    padding: 0;
+    background-color:inherit;
+    vertical-align:middle;
+}
+.k-button-bare {
+    background-color:none !important;
+    border-width:0;
+    color:inherit;
+}
+
+.k-icon {
+    display:inline-block;
+    width:16px;
+    height:16px;
+    overflow:hidden;
+    font-size:0;
+    line-height:0;
+    background-repeat:no-repeat;
+    text-align:center;
+    opacity:.6;
+}
+
+.k-icon:hover {
+    opacity:1;
+}
+
+.k-file .k-icon {
+    position:relative;
+}
+
+.k-icon.k-i-refresh.k-retry {
+    background-image:url(../images/reload_icon_16.png);
+    background-position: 0px 0px !important;
+}
+
+.k-icon.k-i-close.k-delete {
+    background-image:url(../images/round_delete_icon_16.png);
+    background-position: 0px 0px !important;
+}
+
+.k-upload-files{
+	list-style: none;
+	padding:0;
+	marging:0;
+	
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+/*--\kendo Updload--*/
+
+
+
+
+.text-right{
+	text-align: right !important;
+}
+
+.text-center{
+	text-align: center !important;
+}
+
+.success-message{
+	color:#006600; 
+	padding:5px 0 0 0; 
+	font-weight: bold;
+}
+
+.success-message-star:BEFORE, .error-message-star:BEFORE{
+	content: "\002A\00a0"
+}
+
+.error-message{
+	color:#FF3300; 
+	padding:5px 0 0 0; 
+	font-weight: bold;
+}
+.nep-grid .nep-input{
+	width:100%;
+}
+table.table-form  td{
+	vertical-align: top;
+}
+
+.k-datepicker .k-picker-wrap.k-state-default{
+	height: 20px;
+}
+
+.hide-block{
+	display: none;
+}
+
+.show-block{
+	display: block;
+}
+
+.show-line{
+	display: inline-block;
+}
+
+a.file-line{
+	display: block;
+	padding-bottom: 5px;
+}
