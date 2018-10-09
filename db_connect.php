@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(0);
+
 //ini_set('post_max_size', '5M');
 ini_set('upload_max_filesize', '5M');
 
