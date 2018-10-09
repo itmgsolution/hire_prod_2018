@@ -205,8 +205,21 @@ $querySQL = "
 		LEFT JOIN receipt r ON r.RID = b.ReceiptID
 		LEFT JOIN cancelled_payment cp ON cp.NEPFundPaymentID = b.NEPFundPaymentID AND b.ReceiptID IS NULL AND b.NEPFundPaymentID IS NOT NULL
 		$conditionSQL
+		
+		and 
+		concat(b.ServiceRef1, b.ServiceRef2) not in (
+			
+			select
+				concat(Ref1, Ref2)
+			from
+				webservice_log_ktb
+		
+		)
+		
 		ORDER BY b.PaymentDate DESC
 		$the_limit";
+
+//echo $querySQL;
 
 $queryResult = mysql_query($querySQL);
 

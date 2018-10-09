@@ -1,18 +1,22 @@
 <?php
 
+
+
 	include "db_connect.php";
 	include "session_handler.php";
-	
+
 	if($_GET["mode"]=="search"){
 		$mode = "search";
 		
 	}elseif($_GET["mode"]=="letters"){
 		$mode = "letters";
 	}
+
+
 	
 	
 	//yoes 20141007 -- also check permission
-	if($sess_accesslevel == 1 ||  $sess_can_manage_user){	
+	if($sess_accesslevel == 1 || $sess_accesslevel == 2 ||  $sess_can_manage_user){	
 		//can pass		
 	}else{
 		//nope
@@ -99,6 +103,11 @@
                                  </td>
                       </tr>
                       
+					  
+					  <?php if($sess_accesslevel == 2 || $sess_accesslevel == 3){ ?>
+					  
+					  
+					  <?php }else{ ?>
                     	<tr>
                     	  <td bgcolor="#efefef">
                           
@@ -117,11 +126,16 @@
                           
                           <td> </td>
                           <td></td>
-                                  
-							                              
+                                                   
                           
                           
                    	  </tr>
+					  
+					  
+					  <?php }?>
+					  
+					  
+					  
                       
                       
                       
@@ -286,7 +300,10 @@
 					
 					
 					//yoes 20161201 -- pmj only see Company's users
-					if($sess_accesslevel == 3){
+					
+					//yoes 20180319 == ส่วนกลาง only see company users
+					
+					if($sess_accesslevel == 3 || $sess_accesslevel == 2){
 						
 						$filter_sql	.= " and a.AccessLevel = 4 ";
 						

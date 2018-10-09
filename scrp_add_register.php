@@ -30,7 +30,7 @@
 	//echo $the_sql;exit();
 	mysql_query($the_sql);
 	
-	
+
 	
 	//---> handle attached files
 	$file_fields = array(

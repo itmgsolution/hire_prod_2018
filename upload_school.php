@@ -60,7 +60,7 @@
 	mysql_query($sql) or die(mysql_error());
 	
 	//star reading excel
-	//echo "reading excel";  exit();
+	//echo "reading excel"; 
 	
 	
 	/** PHPExcel_IOFactory */

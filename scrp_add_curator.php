@@ -49,6 +49,9 @@ if($_POST["do_add_curator"]){
 	
 	$curator_is_disable = doCleanInput($_POST["curator_is_disable"]);	
 	
+	//yoes 20170909
+	$curator_contract_number = doCleanInput($_POST["curator_contract_number"]);	
+	
 	if($curator_parent > 0){
 	
 		//if curator has parent then this is disabled curator
@@ -121,6 +124,9 @@ if($_POST["do_add_curator"]){
 					
 					, curator_is_dummy_row = 0
 					
+					
+					, curator_contract_number = '$curator_contract_number'
+					
 				where
 					
 					curator_id = '$curator_id'
@@ -155,6 +161,8 @@ if($_POST["do_add_curator"]){
 					, curator_created_date
 					, curator_created_by
 					
+					, curator_contract_number
+					
 				)values(
 				
 				
@@ -177,6 +185,8 @@ if($_POST["do_add_curator"]){
 					
 					, now()
 					, '".$sess_userid."'
+					
+					, '$curator_contract_number'
 				
 				)
 				
@@ -401,7 +411,10 @@ if($_POST["do_add_curator"]){
 						, curator_value
 						
 						, curator_created_date
+												
 						, curator_created_by
+						
+						, curator_contract_number
 					
 						
 					)values(
@@ -425,6 +438,8 @@ if($_POST["do_add_curator"]){
 						
 						, now()
 						, '".$sess_userid."'
+						
+						, '$curator_contract_number'
 					
 					)
 					

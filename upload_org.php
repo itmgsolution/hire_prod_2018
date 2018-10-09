@@ -69,7 +69,7 @@
 	
 	mysql_query($sql) or die(mysql_error());
 	
-	/**/
+	
 	//while(!feof($handle) && $lineall <= 500000){
 	//while(!feof($handle) && $lineall <= 50){
 	while(!feof($handle)){

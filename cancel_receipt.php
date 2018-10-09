@@ -238,7 +238,9 @@
       <?php 
 								
 								
-								echo $cencel_row[cancel_id].$cencel_row[cancel_tid];
+								//echo $cencel_row[cancel_id].$cencel_row[cancel_tid];
+								//yoes 20180214
+								echo $cencel_row[cancel_tid];
 								
 								
 								?>
@@ -284,7 +286,9 @@
 		
 		//$barcode = "|$taxId$serviceCode\r$ref1\r$ref2\r$amountInBarcode";
 		//$barcode = "|99900\r591002737389\r3504\r30162300\r";
-		$barcodeObj = new CustomTCPDFBarcode($cencel_row[cancel_id].$cencel_row[cancel_tid], "C128");
+		//$barcodeObj = new CustomTCPDFBarcode($cencel_row[cancel_id].$cencel_row[cancel_tid], "C128");
+		//yoes 20180214
+		$barcodeObj = new CustomTCPDFBarcode($cencel_row[cancel_tid], "C128");
 		
 		
 	

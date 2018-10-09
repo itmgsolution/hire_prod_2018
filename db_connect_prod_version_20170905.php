@@ -49,10 +49,10 @@ if ($server_ip == "127.0.0.1" || $server_ip == "::1"){
 
 	//produciton
 	/**/
-	$host = "testing_db"; 
+	$host = "production_db"; 
 	$db="hire_project";
 	$username = "dba";
-	$password = "db@dmin-";
+	$password = "db@dmin+";
 	
 }
 
@@ -93,8 +93,8 @@ if(isset($_SESSION['sess_userid'])){
 		if(
 			$this_real_script_name == "user_list.php"
 			){
-			//header("location: index.php");
-			//exit();
+			header("location: index.php");
+			exit();
 		}
 		
 		//yoes 20170516

@@ -744,6 +744,61 @@
 	resetLawfulnessByLID($the_lid);
 	
 	
+	
+	//yoes 20180319
+	//also mark document_requests as "done"
+		
+	$sql = "
+	
+		select
+			docr_id
+		from
+			document_requests
+		where
+			docr_org_id = '$the_cid'
+			and
+			docr_year = '$the_year'
+		order by
+			docr_id desc
+		limit 0,1
+		
+	
+	";
+	
+	
+	$the_docr_id = getFirstItem($sql);
+	
+	if($the_docr_id){
+		
+		$sql = "update document_requests set docr_status = 1 where docr_id = '$the_docr_id'";
+		mysql_query($sql);
+		
+	}else{
+		
+		$sql = "
+		
+			insert into 
+				document_requests(
+					docr_org_id
+					,docr_status					
+					,docr_year
+					,docr_last_updated
+					,docr_date
+				)values( 
+					'$the_cid'
+					,'1'
+					,'$the_year'
+					,NOW()					
+					,NOW()
+					
+					)
+		
+		";
+		mysql_query($sql);
+		
+	}
+	
+	
 	header("location: organization.php?id=$the_cid&focus=lawful&year=".$the_year."&auto_post=1");
 
 	

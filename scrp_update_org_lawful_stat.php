@@ -11,6 +11,8 @@
 	$this_id = doCleanInput($_POST["CID"]);
 	$this_year = doCleanInput($_POST["Year"]);
 	
+	//echo $this_year; exit();
+	
 	if($this_year >= 2013){
 		$is_2013 = 1;	
 	}

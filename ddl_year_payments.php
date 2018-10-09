@@ -1,7 +1,7 @@
 <?php 
 $do_checked_year = 0;
 
-if(date("m") >= 9 ){ //|| $sess_accesslevel == 1 || $sess_accesslevel == 2
+if(date("m") >= 9 || $sess_accesslevel == 1 || $sess_accesslevel == 2){
 	//$the_end_year = date("Y")+1; //new year at month 9
 }else{
 	//$the_end_year = date("Y");

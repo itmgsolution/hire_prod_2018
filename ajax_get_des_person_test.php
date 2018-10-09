@@ -21,19 +21,8 @@
 
 	//calculate years of age (input string: YYYY-MM-DD)
 	function birthday ($birthday){
-		//yoes 20171221 -> change this to comply with SQL's data
-		
-		//list($day,$month,$year) = explode("-",$birthday);
-
-		$year = substr($birthday,0,4);
-		//return $year;
-		$month = substr($birthday,4,2);
-		//return $month;
-		$day = substr($birthday,6,2);
-		
-		
-		
-		//$year = $year  - 543;
+		list($day,$month,$year) = explode("-",$birthday);
+		$year = $year  - 543;
 		//echo $year;
 		$year_diff  = date("Y") - $year;
 		$month_diff = date("m") - $month;
@@ -69,8 +58,8 @@
 	};
 
 	$req = new DesPersonRequest();
-	$req->username = 'jobdepgoth';
-	$req->password = ']y[l6fpvf';
+	$req->username = 'testing';
+	$req->password = 'testing';
 	$req->person_code = $the_id;
 
 	$ws = new SoapClient("http://203.155.46.118/ws/services.php?func=01",array("trace" => 1, "exception" => 0));
@@ -93,8 +82,7 @@
 	$output_array[FIRST_NAME_THAI]	=  $dat->first_name_thai;
 	$output_array[LAST_NAME_THAI] = $dat->last_name_thai;
 	$output_array[SEX_CODE] = $dat->sex_code;
-	//$output_array[BIRTH_DATE] = birthday($dat->birth_date);
-	$output_array[BIRTH_DATE] = $dat->birth_date;
+	$output_array[BIRTH_DATE] = birthday($dat->birth_date);
 	$output_array[DEFORM_ID] = $dat->deform_id;
 	$output_array[PREFIX_NAME_ABBR] = $dat->prefix_name_abbr;
 

@@ -32,27 +32,11 @@
 				
 				
 	$selected_year = $_POST["ddl_year"];
-	/*
-	$sql = "
-		
-		insert into 
-			receipt_edit_requests
-		select
-			*
-			, '$edit_reason'
-			, '$edit_userid'
-			, '$edit_date'
-			, 0
-		from
-			receipt	
-		where
-			rid = '$edit_rid'
-	
-	";*/
+
 	
 	
 	//yoes 20170116 -- for CANCEL
-	if($_POST[do_request_cancel_receipt]){
+	if($_POST["do_request_cancel_receipt"]){
 		
 		$_POST["Amount"] = 0;
 		
@@ -160,8 +144,75 @@
 		}
 	
 	}
-	
-	
+
+    //yoes 20180112 --> also add send-email-out here
+
+    //
+
+    $selected_payment_row = getFirstRow(" 
+                                        select
+                                            *
+                                        from
+                                          payment a
+                                            JOIN 
+                                              lawfulness b
+                                                on a.LID = b.LID
+                                            join company c
+                                                on 
+                                                b.cid = c.cid
+                                            join
+                                              receipt d
+                                                on
+                                                a.rid = d.rid                                            
+                                                   
+                                        where
+                                          a.RID = '".$edit_rid."'
+                                          
+                                          limit 0,1                                
+                                        
+                                        ");
+
+    $selected_company = $selected_payment_row["CID"];
+
+    $company_row = getFirstRow("select * from company where CID = '".$selected_company."'");
+    $lawful_row = getFirstRow("select * from lawfulness where CID = '".$selected_company."' and year = '".$selected_year."'");
+
+    $vars = array(
+
+
+
+
+
+        "{company_code}" =>  $company_row["CompanyCode"]
+        ,"{company_name}" => $company_row["CompanyNameThai"]
+        ,"{the_year}" => $selected_year+543
+        ,"{lawfulness}" =>  getLawfulText($lawful_row["LawfulStatus"])
+        ,"{book_no}" => $selected_payment_row["BookReceiptNo"]
+        ,"{receipt_no}" => $selected_payment_row["ReceiptNo"]
+        ,"{pay_date}" => $selected_payment_row["ReceiptDate"]
+        ,"{pay_amount}" => number_format(deleteCommas($selected_payment_row['Amount']),2)
+        ,"{pay_method}" => formatPaymentName($selected_payment_row["PaymentMethod"])
+        ,"{pay_date_new}" => $the_date
+        ,"{pay_amount_new}" => number_format(deleteCommas($_POST['Amount']),2)
+        ,"{pay_method_new}"  => formatPaymentName($_POST["PaymentMethod"])
+        ,"{remarks}" => $edit_reason
+        ,"{requester}" => getFirstItem("select user_name from users where user_id = '$edit_userid'")
+        ,"{now_date}" => date("Y-m-d")
+
+
+    );
+
+    //print_r($vars); exit();
+
+    //yoes 20180113 -> edit or delete email?
+    if($_POST["do_request_cancel_receipt"]){
+
+        sendMailByEmailId(5, $vars);
+    }else{
+        sendMailByEmailId(3, $vars);
+    }
+
+
 	
 		
 	header("location: view_payment.php?id=".$edit_rid );

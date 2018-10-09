@@ -310,7 +310,11 @@
                                 <td>email</td>
                                 <td><span class="style86" style="padding: 10px 0 10px 0;">
                                   <input name="user_email" type="text" id="user_email" value="<?php echo $output_values["user_email"];?>"  />
-                                </span></td>
+                                </span>
+								
+								
+								
+								</td>
                               </tr>
                               
                                <tr>
@@ -932,6 +936,34 @@
 						-->
 					
 					</script>
+					
+					
+					
+					
+					<?php if($output_values["AccessLevel"]=="4" && $output_values[user_enabled] == 9){?>
+					<form method=post action="scrp_resend_confirm_email.php">
+						<hr><hr>
+						
+						
+						<?php if($_GET["mailed"] == "mailed"){ ?>
+					
+							<div align=center>
+								
+								<font color=green>
+									ได้ทำการส่ง email ยืนยันการใช้งานให้กับผู้ใช้งานสถานประกอบการอีกครั้งแล้ว
+								</font>
+							
+							</div>
+						
+						<?php }?>
+						
+						
+						<div align=center>
+							<input type="submit" value="ส่ง email ยืนยันการใช้งานให้กับผู้ใช้งานสถานประกอบการอีกครั้ง" />
+							<input name="user_id" type="hidden" value="<?php echo $this_id;?>" />
+						</div>
+					</form>
+					<?php }?>
                     
                     
                     <?php if($sess_accesslevel == 1 && ($output_values["AccessLevel"]=="2" || $output_values["AccessLevel"]=="3")){ //admin can manage zones?>

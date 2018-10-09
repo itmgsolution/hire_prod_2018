@@ -254,36 +254,6 @@
 				}
 				
 				
-				//yoes 20170415
-				//also add field for กรรมการบริษัท
-				/*
-				$user_2_rows = getFirstItem("select FirstName_2, LastName_2, user_telephone_2, user_position_2 from users where user_id = '$this_id'");
-				if($user_2_rows[FirstName_2]){
-					
-					$sql = "replace into company_meta(meta_cid, meta_for, meta_value) values('$user_cid','FirstName_2','".$user_2_rows[FirstName_2]."')";	
-					mysql_query($sql);
-					
-				}
-				if($user_2_rows[LastName_2]){
-					
-					$sql = "replace into company_meta(meta_cid, meta_for, meta_value) values('$user_cid','LastName_2','".$user_2_rows[LastName_2]."')";	
-					mysql_query($sql);
-					
-				}
-				if($user_2_rows[user_telephone_2]){
-					
-					$sql = "replace into company_meta(meta_cid, meta_for, meta_value) values('$user_cid','user_telephone_2','".$user_2_rows[user_telephone_2]."')";	
-					mysql_query($sql);
-					
-				}
-				if($user_2_rows[user_position_2]){
-					
-					$sql = "replace into company_meta(meta_cid, meta_for, meta_value) values('$user_cid','user_position_2','".$user_2_rows[user_position_2]."')";	
-					mysql_query($sql);
-					
-				}
-				*/
-				
 				//yoes 20151019 -- also mark users table flag so we know what date is a first-approval date
 				//yoes 20151021 -- also update approver
 				$approved_date_sql = "
@@ -313,6 +283,46 @@
 				
 				
 				$the_body .= "ขอแสดงความนับถือ<br>";
+	
+
+				$the_body .= "กองกองทุนและส่งเสริมความเสมอภาคคนพิการ<br>";
+				$the_body .= "โทรศัพท์ 02-106-9300, 02-106-9327-31<br>";
+				//$the_body .= ", ผู้ดูแลระบบรายงานผลการจ้างงานคนพิการ</td></tr></table>";
+				
+				
+				if ($server_ip == "203.146.215.187"){
+					//ictmerlin.com use default mail
+					mail($mail_address, $the_header, $the_body);
+				}elseif ($server_ip == "127.0.0.1" || 1==0){
+				
+					//donothin	
+				
+				}else{
+					//use smtp
+					doSendMail($mail_address, $the_header, $the_body);	
+				}
+				
+				
+			}elseif($_POST["AccessLevel"] == 4 && $_POST["user_enabled"] == 2 && !$_POST["user_enabled_origin"]){
+				
+				
+				//echo "mailout now";
+				//exit();
+				$mail_address = doCleanInput($_POST["user_email"]);
+				
+				$the_header = "ระบบรายงานผลการจ้างงานคนพิการ: เจ้าหน้าที่ไม่อนุมัติ user account ของคุณ";
+			
+				$the_body = "<table><tr><td>เรียนคุณ ".doCleanInput($_POST["FirstName"])."<br><br>";
+	
+				$the_body .= "เจ้าหน้าที่ได้ทำการตรวจสอบข้อมูล user account ของคุณแล้ว  <br>";
+				
+				$the_body .= "<br>เจ้าหน้าที่ไม่อนุมัติ user account ของคุณ เนื่องจากข้อมูลไม่ครบถ้วน หรือเอกสารแนบไม่ครบ <br>";
+				
+				$the_body .= "<br>กรุณาเข้าใช้ระบบโดยไปที่ url http://ejob.dep.go.th/ejob และทำการ login ด้วย user name และ password ที่ได้ลงทะเบียนไว้ และทำการแก้ไขข้อมูล user account ให้ครบถ้วนอีกครั้ง<br>";
+
+				
+				
+				$the_body .= "<br>ขอแสดงความนับถือ<br>";
 	
 
 				$the_body .= "กองกองทุนและส่งเสริมความเสมอภาคคนพิการ<br>";

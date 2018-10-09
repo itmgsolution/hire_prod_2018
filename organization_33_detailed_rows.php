@@ -24,13 +24,125 @@ if($total_records == 1){ // see if we have to draw headers
 
 }			//ends $total_records == 1				
 
+$row_is_parent = 0;
+
+if($post_row["parent_meta_value"]){
+	
+	$row_is_parent = 1;
+	
+}
+
+
+
+$row_is_child = 0;
+
+if($post_row["child_meta_value"]){
+	
+	$row_is_child = 1;
+	
+}
+	
+if($post_row["group_count"]%2 == 0){	
+	$the_bg = "bgcolor='#F4F6F6'";
+}else{
+	$the_bg = "bgcolor='#ffffff'";
+}
+
+
+
+include_once("organization_33_detailed_rows_js.php");
+
 ?>
 
 
-  <tr>
-                                      <td valign="top"><div align="center"><?php echo $total_records;?></div></td>
-                                      <td valign="top"><?php echo doCleanOutput($post_row["le_name"]);?></td>
-                                      <td valign="top"><?php echo formatGender($post_row["le_gender"]);?></td>
+
+<?php 
+
+if($row_is_parent){
+	$sub_group_count = 0;
+}else{
+	$sub_group_count++;
+}
+
+?>
+
+
+
+<?php if($row_is_parent){ $the_bg = "bgcolor='#ABB2B9'"; ?>
+
+	<tr bgcolor='#ABB2B9' id="<?php echo $post_row["le_id"];?>_alt">
+		<td  valign="top" style="margin-left: 20px;"><div align="center"><?php echo $post_row["group_count"];?></div></td>
+		<td valign="top">
+		
+		
+		<a href='#' onclick='doToggle33Row(<?php echo $post_row["le_id"];?>); return false;' style="font-weight: normal;">
+			<?php echo doCleanOutput($post_row["le_name"]);?>
+		</a>
+		
+		</td>
+		<td valign="top"><?php echo formatGender($post_row["le_gender"]);?></td>
+		<td valign="top"><?php echo doCleanOutput($post_row["le_age"]);?></td>
+		<td valign="top"> <?php echo doCleanOutput($post_row["le_code"]);?></td>
+		<td>
+		</td>
+		<td colspan=7>
+			<?php
+			
+				echo formatDateThai($post_row["le_start_date"],0);														
+														
+				if($post_row["le_end_date"] && $post_row["le_end_date"] != '0000-00-00'){
+					echo "-".formatDateThai($post_row["le_end_date"],0);
+				}
+				
+				if($this_lawful_year >= 2018){
+															
+					if($post_row["le_start_date"] != '0000-00-00'){
+						
+						echo "<font>(แทนการจ่ายเงิน ม.34 ได้ ". number_format(get33DeductionByLeid($post_row["le_id"]),0) ." บาท)</font>";
+						
+					}
+					
+				}
+			
+			?>
+		</td>
+		
+		
+		
+	</tr>
+
+
+
+<?php }?>
+
+
+
+
+  <tr  class="bb" id="<?php echo $post_row["le_id"];?>_main"
+	<?php echo $the_bg; ?> 
+	<?php if($row_is_parent){echo "style='display: none;'"; }?>>
+  
+  
+                                      <td  valign="top" style="margin-left: 20px;"><div align="center"><?php echo $post_row["group_count"]; if($sub_group_count){echo ".".$sub_group_count;}?></div></td>
+                                      
+									  
+									  <td valign="top">
+									  
+									 
+									  
+										  <?php if($row_is_parent){ ?>
+											  <a href='#' onclick='doToggle33Row(<?php echo $post_row["le_id"];?>); return false;' style="font-weight: normal;">
+												<?php echo doCleanOutput($post_row["le_name"]);?>
+												</a>
+										  <?php }else{ ?>
+										  
+											<?php echo doCleanOutput($post_row["le_name"]);?>
+										  
+										  <?php }?>
+									  </td>
+                                      
+									  
+									  <td valign="top"><?php echo formatGender($post_row["le_gender"]);?></td>
                                       <td valign="top"><?php echo doCleanOutput($post_row["le_age"]);?></td>
                                       <td valign="top">
 									  <?php echo doCleanOutput($post_row["le_code"]);?>
@@ -90,11 +202,52 @@ if($total_records == 1){ // see if we have to draw headers
 									  	<?php 
 														
 														
-														echo formatDateThai($post_row["le_start_date"],0);
+														echo formatDateThai($post_row["le_start_date"],0);														
 														
-														
-														if($post_row["le_end_date"]){
+														if($post_row["le_end_date"] && $post_row["le_end_date"] != '0000-00-00'){
 															echo "-".formatDateThai($post_row["le_end_date"],0);
+														}
+														
+														if($this_lawful_year >= 2018){
+															
+															if($post_row["le_start_date"] != '0000-00-00'){
+																
+																echo "<br><font color='green'>(แทนการจ่ายเงิน ม.34 ได้ ". number_format(get33DeductionByLeid($post_row["le_id"]),0) ." บาท)</font>";
+																
+																
+																if($row_is_child){
+																	
+																	//yoes 20180225
+																	//if row is child then also show detail of "within 45 days of parent"
+																	$parent_end_date = get3345DaysParentEndDate($post_row["le_id"]);
+																	if($parent_end_date){
+																		//echo $parent_end_date; 
+																		
+																		$gap_date = dateDiffTs(strtotime($parent_end_date),strtotime($post_row["le_start_date"]));
+																		//echo " (รับเข้าทำงานแทนภายใน ". $gap_date . " วัน / ไม่คิดส่วนต่าง " .number_format($wage_rate*$gap_date,2)." บาท)";
+																		echo " (รับเข้าทำงานแทนภายใน ". $gap_date . " วัน)";
+																	}
+																	
+																	
+																	$parent_row = getFirstRow("select * from lawful_employees where le_id = '".$post_row["child_meta_value"]."'");
+																	
+																	echo "<br><font color='blue'>(ทำงานแทน ".$parent_row[le_name]." )</font>";
+																	
+																}
+																
+																
+																if($row_is_parent){
+																	
+																	$parent_row = getFirstRow("select * from lawful_employees where le_id = '".$post_row["parent_meta_leid"]."'");
+																	
+																	echo "<br><font color='#ff00ff'>(ทำงานแทนโดย ".$parent_row[le_name]." )</font>";
+																	
+																}
+																
+																
+																
+															}
+															
 														}
 														
 														
@@ -186,7 +339,7 @@ if($total_records == 1){ // see if we have to draw headers
                                                 
                                                 </a>
 												
-												<?php if(!$read_only && !$case_closed){ //yoes 20160816 --> add this?>
+												<?php if(!$read_only && !$case_closed && !$row_is_parent){ //yoes 20160816 --> add this?>
 												<a href="scrp_delete_curator_file.php?id=<?php echo $file_row["file_id"];?>&curator_id=<?php echo $post_row["le_id"];?>&return_id=<?php echo $this_id;?>" title="ลบไฟล์แนบ" onClick="return confirm('คุณแน่ใจหรือว่าจะลบไฟล์แนบ? การลบไฟล์ถือเป็นการสิ้นสุดและคุณจะไม่สามารถแก้ไขการลบไฟล์ได้');"><img src="decors/cross_icon.gif" alt="" height="10"  border="0" /></a>
                                                 <?php }?>
 												
@@ -239,7 +392,7 @@ if($total_records == 1){ // see if we have to draw headers
                                       
                                       </td>
                                      
-                                     <?php if($sess_accesslevel != 5 && !$is_read_only && !$case_closed){?>
+                                     <?php if($sess_accesslevel != 5 && !$is_read_only && !$case_closed && !$row_is_parent){?>
                                          
                                          
                                          
@@ -269,7 +422,13 @@ if($total_records == 1){ // see if we have to draw headers
                                           <td valign="top"><div align="center"><a href="organization.php?id=<?php echo $this_id;?>&le=le&focus=lawful&year=<?php echo $this_lawful_year;?>&leidex=<?php echo doCleanOutput($post_row["le_id"]);?>" title="แก้ไขข้อมูล"><img src="decors/create_user.gif" alt="" border="0" /></a></div></td>
                                           
                                           
-                                      <?php }?>
+                                      <?php }else{?>
+									  
+										<td></td>
+										<td></td>
+										
+									  
+									  <?php } ?>
                                       
                                       
                                       

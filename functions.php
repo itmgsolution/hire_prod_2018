@@ -1120,11 +1120,9 @@ function getInterestDate($from_what_date, $this_lawful_year, $to_what_date,$the_
 	//yoes 20170509
 	//if it's 54 budget date then it should start at that day
 	//so just add one more day to the date
-	if($the_54_budget_date && $from_what_date == $the_54_budget_date . " 00:00:00"){
+	if($the_54_budget_date){
 	
-		//yoes 20180621 --> for $the_54_budget_date -> include first and last day into interest date
 		$interest_date++;	
-		$interest_date++;
 		
 	}
 

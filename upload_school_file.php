@@ -30,8 +30,6 @@
 		$new_file_name = date("ymdhis").rand(00,99)."_".$file_name;
 		$file_new_path = $upload_folder.$new_file_name;
 		
-		//echo $upload_folder; exit();
-		
 		/*
 		echo $file_size;
 		echo $file_type;

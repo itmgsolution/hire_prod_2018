@@ -51,7 +51,7 @@
 	<table border="0" width="100%">
     	<tr>
         	<td>
-            <div style="padding-bottom:10px;" class="logo_text" align="left">ระบบรายงานผลการจ้างงานคนพิการ (สำหรับเจ้าหน้าที่ฯ)</div>
+            <div style="padding-bottom:10px;" class="logo_text" align="left">ระบบรายงานผลการจ้างงานคนพิการ</div>
             </td>
             <td valign="bottom">
             <?php if($_SESSION['sess_userfullname']){ ?>
@@ -70,6 +70,11 @@
       
        <a href="index.php"  class="glink" style="color:#000000;"> 
 	  หน้าแรก</a>
+      
+      
+       <a href="http://203.154.94.105/gov"  class="glink" style="color:#000000;"> 
+      ระบบรายงานผลหน่วยงานภาครัฐ
+      </a>
       
 		<?php 
 			
@@ -128,7 +133,7 @@
 	  	//echo "can manage user?". $sess_can_manage_user;
 	  
 	   if($sess_accesslevel != 4){ //company won;t see these?>
-          <?php if($sess_accesslevel == 1 ){ //only admin will see this // yoes 20141007 -- add ability for พมจ to edit users //yoes 20161201 - pmj wont see this ||  $sess_can_manage_user?>
+          <?php if($sess_accesslevel == 1 || $sess_accesslevel == 2 ){ //only admin will see this // yoes 20141007 -- add ability for พมจ to edit users //yoes 20161201 - pmj wont see this ||  $sess_can_manage_user?>
             <a href="user_list.php" class="glink" style="color:#000000;">ผู้ใช้งานระบบ</a>
           <?php }?>
       
@@ -231,6 +236,15 @@
             <tr>
             	<td valign="top" width="225" style="border-right: solid 1px #efefef;">
                 	
-               		<?php include "left_menu.php"; ?> 
+               		<?php 
+					
+					if(basename($_SERVER["SCRIPT_FILENAME"], '.php') == "ktb_sync"){
+					
+					
+					}else{
+						include "left_menu.php";					
+					
+					}?> 
+                    
                                         
                 </td>

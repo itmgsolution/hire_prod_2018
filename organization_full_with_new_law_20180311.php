@@ -5824,15 +5824,15 @@ $is_2013 = 1;
 														   
 														?>
                                                         
-                                                        <?php if($this_lawful_year < 2016 && 1==0 || $sess_userid == 1){ ?>
+                                                        <?php if($this_lawful_year < 2016){ ?>
                                                         
                                                         <br />
                                                        <a href="org_list.php?search_id=<?php echo $this_id?>&mode=payment&for_year=<?php echo $this_lawful_year;?>" style="font-weight: bold;">+ เพิ่มข้อมูลการส่งเงินเข้ากองทุน</a>
-                                                       <?php }//else{?>
+                                                       <?php }else{?>
                                                        
                                                         <br />
                                                        <a href="add_invoice.php?search_id=<?php echo $this_id?>&mode=payment&for_year=<?php echo $this_lawful_year;?>" style="font-weight: bold;">+ พิมพ์ใบชำระเงินสำหรับระบบใบเสร็จออนไลน์</a>
-                                                       <?php //}?>
+                                                       <?php }?>
                                                        
                                                        <?php if($this_lawful_year == 2011){?>
                                                          <br />

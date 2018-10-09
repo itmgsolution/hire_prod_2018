@@ -54,6 +54,7 @@
                             <option value="0" <?php if($_POST["alert_type"] == "0"){echo "selected='selected'";}?>>ไม่ทำตามกฏหมาย</option>
                             <option value="3" <?php if($_POST["alert_type"] == "3"){echo "selected='selected'";}?>>ปฏิบัติตามกฏหมายแต่ไม่ครบอัตราส่วน</option>
                             <option value="1" <?php if($_POST["alert_type"] == "1"){echo "selected='selected'";}?>>พบข้อมูลการใช้สิทธิซ้ำซ้อน</option>
+							<option value="6" <?php if($_POST["alert_type"] == "6"){echo "selected='selected'";}?>>การแจ้งแนบไฟล์ สปส 1-10 ส่วนที่ 2</option>
                             
                             
                         </select>
@@ -299,6 +300,45 @@
 									
 									$province_sql
 									
+									$email_status_sql
+							
+							
+							";
+							
+							
+						}elseif($alert_type == "6"){
+							
+							
+							$sql = "
+							
+								select
+									*
+								from
+									company a
+										join
+											lawfulness_company b
+												on 
+												a.cid = b.cid
+												and
+												b.year = '$ddl_year'
+												and
+												b.lawful_submitted = 2
+												
+										join
+											users c
+												on
+												a.cid = c.user_meta
+												and
+												c.AccessLevel = 4
+												and
+												user_enabled = 1
+												
+								where 
+									
+									1 = 1 
+								
+									$province_sql
+										
 									$email_status_sql
 							
 							

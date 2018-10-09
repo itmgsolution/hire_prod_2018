@@ -10,6 +10,7 @@
 	$the_wage = $the_wage; //ค่าจ้างประขำปี
 	$this_lawful_year = $this_lawful_year; //ปีนี้ปีอะไร (ปีของ lid)
 	$the_province = $province_array[$i] //province อะไร
+	$need_for_lawful -> อัตราส่วนที่ต้องรับ (ก่อนหัก 33 35) คือเท่าไหร่
 	
 	---> output as below
 	$total_maimad_paid += $maimad_paid; //จ่ายให้กี่คน
@@ -90,7 +91,33 @@
 	
 	$start_money = $employees_ratio*$year_date*$the_wage;
 	
-	//echo "start_money -- $start_money --";
+	
+	$deducted_33 = 0;
+	if($this_lawful_year >= 2018 && $this_lawful_year < 2050){
+		
+		$lid_employees = getFirstItem("select employees from lawfulness where lid = '$lid_to_get_34'");
+		$lid_ratio = default_value(getFirstItem("select var_value from vars where var_name = 'ratio_".$this_lawful_year."'"),100);
+		
+		$employees_ratio = getEmployeeRatio($lid_employees,$lid_ratio);
+		$start_money = $employees_ratio*$year_date*$the_wage;
+		
+		$lidcid = getFirstItem("select cid from lawfulness where lid = '$lid_to_get_34'");
+		
+		$deducted_33 = get33DeductionByCIDYear($lidcid, $the_year);
+		//echo $deducted_33;
+					
+		if($deducted_33 > $start_money){
+			$deducted_33 = $start_money;
+		}
+		
+		$start_money -= $deducted_33;
+		
+		//echo $start_money;		
+		
+	}
+	
+	
+
 	
 	//echo "<br>employees_ratiooo ".$employees_ratio." oo";
 	
@@ -199,7 +226,7 @@
 	
 	//exit();
 	
-	//echo "($paid_money/($year_date*$the_wage)"; //exit();
+	//echo "($paid_money/($year_date*$the_wage)"; exit();
 	
 	//yoes 20160201 --> if จ่ายเกิน then move it somewhere else
 	//echo "if( $paid_money > $start_money ){"; exit();
@@ -236,6 +263,8 @@
 	
 	
 	$maimad_paid = floor($paid_maimad_float);
+	
+	//echo $maimad_paid; exit();
 	
 	//$maimad_paid = floor(1);
 	

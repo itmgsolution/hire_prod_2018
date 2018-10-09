@@ -52,25 +52,36 @@
 	
 	
 	
+	//yoes 20180220 -> also delete all related metas
+	$the_sql = "
+	
+		delete
+		from
+		lawful_employees_meta
+		where
+		meta_leid = '$this_id'
+	
+	";
+	mysql_query($the_sql);
 	
 	
-	
+	$the_lid = getFirstItem("select lid from lawfulness where Year = '$this_year' and CID = '$this_cid'");
 	
 	
 	//sync this value to lawful employee		
-	$hire_numofemp = getFirstItem("
+	/*$hire_numofemp = getFirstItem("
 									SELECT 
 										count(*)
 									FROM 
 										$table_name
 									where
 										le_cid = '$this_cid'
+										and le_year = '$this_year'");*/
 										
-										
-										and le_year = '$this_year'");
+	$hire_numofemp = getHireNumOfEmpFromLid($the_lid);
 										
 	//yoes 20160104 -- do a full "change log" here
-	$the_lid = getFirstItem("select lid from lawfulness where Year = '$this_year' and CID = '$this_cid'");
+	
 	doLawfulnessFullLog($sess_userid, $the_lid, basename($_SERVER["SCRIPT_FILENAME"]));
 	//
 										

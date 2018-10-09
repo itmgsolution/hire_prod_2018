@@ -103,7 +103,7 @@
                             <td>
                             
                                 เลขที่บัตรประชาชน        </td>
-                            <td>
+                            <td colspan="3">
                             
                                 <input type="text" name="curator_idcard___" id="curator_idcard____" maxlength="13"
                                 
@@ -241,9 +241,41 @@
 								
 								</script>
                                 
+                                
+                                 <?php if(($sess_accesslevel == 1 || $sess_accesslevel == 2 || $sess_accesslevel == 3) && !$is_read_only && !$case_closed){ ?>
+                                            <input id="btn_get_doe_org" type="button" value="ดึงข้อมูลสัญญาของสถานประกอบการ" onClick="return doGetDOEOrgData();" />
+                                            <script>
+											
+												function doGetDOEOrgData(){
+													
+													
+												
+													$.ajax({
+													  method: "POST",
+													  url: "http://203.154.94.108/ajax_get_doe_org.php",
+													  data: { name: "John", location: "Boston" }
+													})
+													  .done(function( html ) {
+														//alert( "Data Saved: " + msg );
+														$( "#doe_org_result" ).html( html);
+													  });
+													
+												}
+												
+											</script>
+                                            <?php }?>  
+                                            
+                                   <span id="doe_org_result">
+                                   
+                                   </span>
+                                
                                         
                                 </td>
-                            <td>
+                           
+                        </tr>
+                        
+                        
+                        	 <td>
                             
                                 ชื่อ-นามสกุล        </td>
                             <td>
@@ -253,6 +285,9 @@
                                  value="<?php echo $curator_row_to_fill["curator_name"];?>"
                                 
                                 />    *    </td>
+                        
+                        <tr>
+                        
                         </tr>
                         
                         
@@ -333,7 +368,84 @@
                         </tr>
                         
                        
-                        
+                         <tr>
+                            <td>
+                            
+                            	<span id="curator_start_date_text">เลขที่สัญญา</span>
+                                
+                                </td>
+                            <td colspan="3">
+                            
+                             <input type="text" name="curator_contract_number" id="curator_contract_number" 
+                                
+                                 value="<?php echo $curator_row_to_fill["curator_contract_number"];?>"
+                                
+                                />
+                                
+                                
+                                <?php if(($sess_accesslevel == 1 || $sess_accesslevel == 2 || $sess_accesslevel == 3) && !$is_read_only && !$case_closed){ ?>
+                                            <input id="btn_get_doe" type="button" value="ดึงข้อมูลสัญญาของผู้ใช้สิทธิ" onClick="return doGetDOEData();" />
+                                            <script>
+											
+												function doGetDOEData(){
+													
+													var the_id = "";										
+													<?php for($i=1;$i<=13;$i++){?>											
+														the_id = the_id + ($('#id_<?php echo $i;?>').val());											
+													<?php }?>
+											
+													
+													
+													var checkOK = "1234567890";
+												   var checkStr = the_id;
+												   var allValid = true;
+												   for (i = 0;  i < checkStr.length;  i++)
+												   {
+													 ch = checkStr.charAt(i);
+													 for (j = 0;  j < checkOK.length;  j++)
+													   if (ch == checkOK.charAt(j))
+														 break;
+													 if (j == checkOK.length)
+													 {
+													   allValid = false;
+													   break;
+													 }
+												   }
+												   if (!allValid)
+												   {
+													 alert("เลขที่บัตรประชาชนต้องเป็นเลข 13 หลักเท่านั้น");
+													 document.getElementById('id_1').focus();
+													 return (false);
+												   }
+													
+													
+													if(the_id.length != 13)
+													{
+														alert("เลขที่บัตรประชาชนต้องเป็นเลข 13 หลักเท่านั้น");
+														document.getElementById('id_1').focus();
+														return (false);
+													}
+												
+													$.ajax({
+													  method: "POST",
+													  url: "http://203.154.94.108/ajax_get_doe.php",
+													  data: { name: "John", location: "Boston" }
+													})
+													  .done(function( html ) {
+														//alert( "Data Saved: " + msg );
+														$( "#doe_result" ).html( html);
+													  });
+													
+												}
+												
+											</script>
+                                            <?php }?>  
+                                            
+                                   <span id="doe_result">
+                                   
+                                   </span>
+                            
+                        	 </td>
                         
                         <tr>
                             <td>

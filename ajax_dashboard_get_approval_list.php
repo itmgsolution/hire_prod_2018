@@ -71,7 +71,7 @@ $sql = "
                                         
                                         $zone_sql
                                         
-                                        order by user_id desc
+                                        order by user_id asc
                                         
                                         limit 0,$the_limit
 									

@@ -10,8 +10,6 @@
 	}
 	
 	
-	
-	
 	if(strlen(trim($_POST["user_name"]))==0 || strlen(trim($_POST["password"]))==0){
 	
 		//nologin

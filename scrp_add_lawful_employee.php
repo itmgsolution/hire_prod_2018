@@ -148,16 +148,54 @@
 	$inserted_id = mysql_insert_id();
 	
 	
+	//yoes 20180219
+	//handle chain of 33 replacing here
+	if($_POST['le_33_parent'] || 1==1 ){ //1==1 because dropdown is defaul 0 anyway
+		
+		$le_33_parent = $_POST['le_33_parent']*1;
+		
+		//echo $le_33_parent; exit();
+		
+		$meta_sql = "
+		
+			replace into
+				lawful_employees_meta (
+
+					meta_leid
+					, meta_for
+					, meta_value
+				
+				)values(
+				
+					'$inserted_id'
+					, 'child_of'
+					, '$le_33_parent'
+				
+				
+				)				
+		
+		";
+		
+		//echo $meta_sql; exit();
+		
+		mysql_query($meta_sql);		
+		
+		
+		
+	}
+	
 	
 	//sync this value to lawful employee
-	$hire_numofemp = getFirstItem("
+	/*$hire_numofemp = getFirstItem("
 									SELECT 
 										count(*)
 									FROM 
 										$table_name
 									where
 										le_cid = '".$_POST["le_cid"]."'
-										and le_year = '".$_POST["le_year"]."'");
+										and le_year = '".$_POST["le_year"]."'");*/
+	
+	$hire_numofemp = getHireNumOfEmpFromLid(getFirstItem("select lid from lawfulness where Year = '".$_POST["le_year"]."' and CID = '".$_POST["le_cid"]."'"));
 								
 								
 			

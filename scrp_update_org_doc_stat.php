@@ -21,6 +21,8 @@
 						
 						
 						);
+						
+						
 	
 	//if status is == 1 then we do not need docr desc
 	//else, record docr desc
@@ -39,7 +41,7 @@
 	//add vars to db
 	$the_sql = generateInsertSQL($_POST,$table_name,$input_fields,$special_fields,$special_values);
 	
-	//echo $the_sql;
+	//echo $the_sql; exit();
 	mysql_query($the_sql);
 	
 	header("location: organization.php?id=$this_id&focus=official&updated=updated&year=".$_POST["docr_year"]);

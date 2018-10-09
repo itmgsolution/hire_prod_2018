@@ -386,7 +386,34 @@
 	
 	//yoes 20160208
 	resetLawfulnessByLID($lawful_id);
-	
+
+	//yoes 20180112 --> also add send-email-out here
+
+    //
+    $company_row = getFirstRow("select * from company where CID = '".$selected_company."'");
+    $lawful_row = getFirstRow("select * from lawfulness where CID = '".$selected_company."' and year = '".$selected_year."'");
+
+    $vars = array(
+
+        "{company_code}" =>  $company_row["CompanyCode"]
+        ,"{company_name}" => $company_row["CompanyNameThai"]
+        ,"{the_year}" => $selected_year+543
+        ,"{lawfulness}" =>  getLawfulText($lawful_row["LawfulStatus"])
+        ,"{book_no}" => doCleanInput($_POST["BookReceiptNo"])
+        ,"{receipt_no}" => doCleanInput($_POST["ReceiptNo"])
+        ,"{pay_date}" => $the_date
+        ,"{pay_amount}" => number_format(deleteCommas($_POST['Amount']),2)
+        ,"{pay_method}" => formatPaymentName($_POST["PaymentMethod"])
+        ,"{now_date}" => date("Y-m-d")
+
+    );
+
+    //print_r($vars); exit();
+
+    sendMailByEmailId(4, $vars);
+
+
+
 	//then redirect to whatever page
 	//header("location: org_list.php?mode=lettersl&letter_added=letter_added");
 	if($_POST["back_to"] == "lawfulness_tab" && !$extra_query){

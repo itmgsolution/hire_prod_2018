@@ -37,6 +37,8 @@
 ?>
 <?php include "header_html.php";?>
 
+<?php //exit(); //yoes 20180104 - this page is slow so cut it off when needed ?>
+
 <?php include("Charts/Includes/FusionCharts.php"); ?>
 <script type="text/javascript" src="Charts/FusionCharts.js"></script>
 
@@ -1283,20 +1285,21 @@
                         </tr>
                         <tr>
                             <td valign="top">
-                            
                             	
+                                <?php 
+								if($sess_accesslevel != 8){
+										
+								
+								}
+								?>
+                                                                                       	                            	
                                 
-                                
-                            	<div align="center">
-                            	<table border="1" style="border:1px solid #CCC; border-collapse: collapse;<?php 								
-									if($sess_accesslevel == 8){
-										echo "display: none;";	
-									}								
-								?>">
+                                <div align="center">
+                            	<table border="1" style="border:1px solid #CCC; border-collapse: collapse;">
                                 	<tr>
-                                    	<td colspan="4">
+                                    	<td colspan="7">
                                      	<div align="center" style=" color:#060">
-                                        สถานประกอบการ ยื่นแบบออนไลน์
+                                        ผลการชำระเงินของสถานประกอบการ e-service
                                         </div>
                                         </td>
                                     </tr>
@@ -1323,49 +1326,79 @@
                                      	 สถานะ
                                           </div>
                                         </td>
+                                        
+                                        
+                                        <td align="center">
+                                        <div align="center">
+                                     	 ยอดเงินที่จ่าย
+                                          </div>
+                                        </td>
+                                        
+                                        <td align="center">
+                                        <div align="center">
+                                     	 จ่ายโดย
+                                          </div>
+                                        </td>
+                                        
+                                        <td align="center">
+                                        <div align="center">
+                                     	 เล่มที่-เลขที่ใบเสร็จ
+                                          </div>
+                                        </td>
+                                        
                                     </tr>
                                     
                                     <?php 
 									
 									$sql = "
 									
+										SELECT
+											b.ServiceRef1,
+											b.ServiceRef2,
+											c.CompanyCode,
+											c.BranchCode,
+											c.CompanyNameThai,
+											law.Year,
+											b.PaymentDate,
+											c.Province,
+											c.CID,
+											b.TransactionPrincipalAmount,
+											b.TransactionInterestAmount,
+											b.TransactionTotalAmount,
+											b.PaidTotalAmount,
+											b.PaymentMethod,
+											ba.bank_name BankName,
+											b.ChequeNo,
+											COALESCE(r.BookReceiptNo,cp.BookReceiptNo) BookReceiptNo,
+											COALESCE(r.ReceiptNo,cp.ReceiptNo) ReceiptNo,
+											b.PaymentStatus,
+											b.KTBImportDate, 
+											b.KTBCancelDate, 
+											b.NEPFundExportDate, 
+											b.NEPFundImportDate,
+											b.NEPFundCancelDate,
+											law.LawfulStatus as lawfulness_status,
+											b.ReceiptID
+										FROM bill_payment b
+										JOIN lawfulness law ON law.LID = b.LID
+										JOIN company c ON law.CID = c.CID
+										LEFT JOIN bank ba ON ba.BankCode = b.ChequeBankCode
+										LEFT JOIN receipt r ON r.RID = b.ReceiptID
+										LEFT JOIN cancelled_payment cp ON cp.NEPFundPaymentID = b.NEPFundPaymentID AND b.ReceiptID IS NULL AND b.NEPFundPaymentID IS NOT NULL
+										
+										where
+											b.PaymentStatus = 1
+										
+										
+										
+										ORDER BY b.PaymentDate DESC
+										
+										
+										";
+										
+									//echo $sql;
 									
-									SELECT 
-										z.CID 
-										, Province 
-										, CompanyCode 
-										, CompanyTypeName
-										, z.CompanyTypeCode 
-										, CompanyNameThai 
-										, province_name 
-										, LawfulFlag 
-										, y.LawfulStatus as lawfulness_status 
-										, y.Employees as lawful_employees 
-									FROM 
-										company z 
-											LEFT outer JOIN companytype b 
-												ON z.CompanyTypeCode = b.CompanyTypeCode 
-											LEFT outer JOIN provinces c 
-												ON z.province = c.province_id 
-											JOIN lawfulness y 
-												ON z.CID = y.CID and y.Year = '$the_end_year' 
-												
-											left join lawfulness_company xxx 
-												on z.CID = xxx.CID 
-												
-									where 
-										1=1 
-										and z.CompanyTypeCode < 200 
-										and BranchCode < 1 
-										and xxx.Year = '$the_end_year' 
-										and (xxx.lawful_submitted = '1') 
-									
-										$province_sql
-									
-									
-									order by lawful_submitted_on asc
-									
-									";
+									$paymentMethodMapping = getPaymentMethodMapping();
 									
 									$submit_result = mysql_query($sql);
 									
@@ -1380,27 +1413,12 @@
                                      	 
                                           <div align="center">
                                             
-                                            <?php echo 
-                                            
-                                            
-                                            formatDateThaiShort(
-                                                getFirstItem("
-                                                        select 
-                                                            lawful_submitted_on 
-                                                        from 
-                                                            lawfulness_company 
-                                                        where 
-                                                            CID = '".$post_row["CID"]."' 
-                                                            and 
-                                                            Year = '$the_end_year'")
-                                            );
-                                            
-                                            ?>
+                                           <?php echo formatDateThaiShort($post_row["PaymentDate"],1,0);?>
                                         </div>
                                          
                                       </td>
                                    	  <td>
-                                     	 <a href="organization.php?id=<?php echo doCleanOutput($post_row["CID"]);?>&all_tabs=1&year=<?php echo $cur_year;?>"><?php 
+                                     	 <a href="organization.php?id=<?php echo doCleanOutput($post_row["CID"]);?>&focus=lawful&year=<?php echo $post_row["Year"];?>"><?php 
 										 
 										 
 										 
@@ -1431,6 +1449,20 @@
 										?></div>
                                      	 
                                       </td>
+                                      
+                                      
+                                      <td>
+                                            <div align="right"><?php echo formatNumber($post_row["PaidTotalAmount"]);?></div>
+                                        </td>
+                                        <td>
+                                            <?php echo $paymentMethodMapping[$post_row["PaymentMethod"]]; //echo $post_row["PaymentMethod"];?>
+                                        </td>
+                                        
+                                        
+                                        <td>
+											<a href="view_payment.php?id=<?php echo $post_row[ReceiptID];?>" target="_blank"><?php echo $post_row["BookReceiptNo"];?>-<?php echo $post_row["ReceiptNo"];?></a>
+    	                                </td>
+                                        
                                     </tr>
                                     
                                     <?php
@@ -1442,6 +1474,30 @@
                                 </table>
                               </div>
                               
+                               <hr />
+                                
+                                
+                            	<div align="center">
+                                    <span id="dashboard_ejob_form"></span>
+                                </div>
+                                <script>
+
+                                    function doGetEjobList(the_limit, do_hide_more = 0){
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "ajax_dashboard_ejob_online_form.php",
+                                            data: "the_limit="+the_limit+"&do_hide_more="+do_hide_more+"&the_end_year="+<?php echo $the_end_year;?>,
+                                            cache: false,
+                                            success: function(html){
+                                                $('#dashboard_ejob_form').html("");
+                                                $('#dashboard_ejob_form').append(html);
+                                            }
+                                        });
+                                    }
+
+                                    doGetEjobList(10);
+
+                                </script>
                               
                               
                                <hr />
@@ -1775,307 +1831,34 @@
                               <?php }//end m34 for admin and pmj?>   
                               
                               
-                              <?php if(1==1){?>
+
                               <hr />
                               
                               <div align="center">
-                            	<table border="1" style="border:1px solid #CCC; border-collapse: collapse;<?php 								
-									if($sess_accesslevel == 8){
-										echo "display: none;";	
-									}								
-								?>">
-                                	<tr>
-                                    	<td colspan="5">
-                                     	<div align="center" style="color: #060; font-family: 'Microsoft Sans Serif';">
-                                        รายชื่อสถานประกอบการที่ใช้ลูกจ้างคนพิการซ้ำซ้อนและผู้ดูแลซ้ำซ้อน
-                                        </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                    	
-                                    	<td align="center">
-                                        <div align="center">
-                                     	 ชื่อสถานประกอบการ
-                                          </div>
-                                        </td>
-                                    	<td align="center"> 
-                                        
-                                        <div align="center">
-                                     	 จังหวัด
-                                          </div>
-                                          
-                                      </td>
-                                    	<td align="center">
-                                        
-                                        <div align="center">
-                                        
-                                        เลขที่บัตรประชาชนที่ซ้ำซ้อน
-                                        
-                                        </div>
-                                        </td>
-                                    	<td align="center">
-                                        
-                                         <div align="center">
-                                        
-	                                        มาตราที่ซ้ำซ้อน
-                                        
-                                        </div>
-                                        
-                                        </td>
-                                    	<td align="center">
-                                        <div align="center">
-                                     	 สถานะ
-                                          </div>
-                                        </td>
-                                    </tr>
-                                    
-                                    <?php 
-									
-									$sql = "
-									
-															 
-									  
-									
-									
-									  select
-					
-											the_code
-											
-										  from
-										
-										  (
-											select
-											le_code as the_code
-											, le_name as the_name
-											, 'l' as the_type
-											
-										  from
-											lawful_employees
-												
-											where le_year = '$the_end_year'
-										
-											union
-										
-											select
-											  curator_idcard as the_code
-											  , curator_name as the_name
-											  , 'c' as the_type
-											from
-											  curator, lawfulness
-											  where
-											  curator_lid = lid
-											  and
-											  Year = '$the_end_year'
-											  
-											  and
-											  curator_is_disable = 1
-											  
-										
-											  )                    a
-										
-										
-										group by the_code
-										having count(the_code) > 1
-										
-										order by the_code asc
-									
-									";
-									
-									//echo $sql;
-									
-									$submit_result = mysql_query($sql);
-									
-									$cur_year = $the_end_year;
-									
-									while($post_row = mysql_fetch_array($submit_result)){
-										
-									?>
-                                                
-                                                
-                                                
-                                                
-                                                
-                                                <?php 
-												
-												$sub_sql = "
-												
-													
-													select
-															a.cid
-															, CompanyNameThai
-															, CompanyTypeCode
-															, Province
-															, LawfulStatus
-															, le_code		
-															, '33' as the_type													
-													  from
-														company a
-															join lawfulness b
-														
-															  on
-																a.cid = b.cid
-																and
-																b.year = '$the_end_year'
-																
-															join
-																lawful_employees c
-																	on a.cid = c.le_cid
-																	and
-																	b.year = c.le_year
-																													 
-													  where
-													  	le_code = '".$post_row["the_code"]."'
-														and
-														CompanyTypeCode != '14'
-														and
-														CompanyTypeCode < 200
-														
-														
-													union
-													
-													
-													select
-															a.cid
-															, CompanyNameThai
-															, CompanyTypeCode
-															, Province
-															, LawfulStatus
-															, curator_idcard as le_code		
-															, '35' as the_type
-													  from
-														company a
-															join lawfulness b
-														
-															  on
-																a.cid = b.cid
-																and
-																b.year = '$the_end_year'
-																
-															join
-																curator c
-																	on b.lid = c.curator_lid
+                                <span id="3335_duped_list">
 
-																													 
-													  where
-													  	curator_idcard = '".$post_row["the_code"]."'
-														and
-														curator_parent = 0
-														and
-														CompanyTypeCode != '14'
-														and
-														CompanyTypeCode < 200
-														
-														
-														
-												
-												";
-												
-												
-												//echo "<br>".$sub_sql;
-												
-												$sub_result = mysql_query($sub_sql);
-												
-												
-												while($sub_row = mysql_fetch_array($sub_result)){
-												
-												
-												?>
-                                                
-                                                
-                                                <tr>
-                                                 
-                                                  <td>
-                                                  
-                                                
-                                                     
-                                                     
-                                                     <a href="organization.php?id=<?php echo $sub_row["cid"];?>&year=<?php echo $the_end_year;?>" target="_blank">
-                                                     <?php 
-                                                     
-                                                     
-                                                     
-                                                     //echo doCleanOutput($post_row["CompanyNameThai"]);
-                                                     
-                                                     
-                                                     echo formatCompanyName($sub_row["CompanyNameThai"],$sub_row["CompanyTypeCode"]);
-                                                     
-                                                     
-                                                     
-                                                     ?>
-                                                     </a>
-                                                                  
-                                                  </td>
-                                                  <td>
-                                                  <?php 
-                                                  
-                                                  
-                                                  echo getFirstItem("select province_name from provinces where province_id = '".$sub_row["Province"]."'");
-                                                  
-                                                  ?>
-                                                  
-                                                  
-                                                  </td>
-                                                  <td>
-                                                  
-                                                    <?php 
-                                                        
-                                                        echo $sub_row["le_code"];
-                                                    
-                                                    ?>
-                                                  </td>
-                                                  <td>
-                                                  
-                                                  
-                                                  <div align="center">
-                                                  
-                                                  <?php 
-												  
-													  if($sub_row["the_type"] == "33"){
-														$this_type = "มาตรา 33";				
-													}else{
-														$this_type = "มาตรา 35";
-													}
-													
-													echo $this_type;
-												  
-												  ?>
-                                                  
-                                                  </div>
-                                                  
-                                                  </td>
-                                                 
-                                                  <td>
-                                                  
-                                                  <div align="center"><?php //echo $post_row["lawfulness_status"]; 
-                                            
-                                                        echo getLawfulImage(($sub_row["LawfulStatus"]));
-                                            
-                                                    ?></div>
-                                                     
-                                                     <?php 
-                                                     
-                                                        //echo getLawfulImageFromLID(($post_row["lawful_id"]));
-                                                     ?>
-                                                     
-                                                  </td>
-                                                </tr>
-                                                
-                                                
-                                                
-                                                <?php } //end sub-while?>
-                                                
-                                                
-                                                
-                                    
-                                    <?php
-										
-										
-									}																
-									
-									?>
-                                </table>
+                                </span>
                               </div>
-							   <?php }?>  
+                                  <script>
+
+                                      function doGet3335List(the_limit, do_hide_more = 0){
+                                          $.ajax({
+                                              type: "POST",
+                                              url: "ajax_dashboard_get_3335_duped.php",
+                                              //data: "the_end_year="+<?php echo $the_end_year;?>+"&the_limit"+the_limit, //+"&do_hide_more"+do_hide_more
+                                              data: "the_limit="+the_limit+"&do_hide_more="+do_hide_more+"&the_end_year="+<?php echo $the_end_year;?>,
+                                              cache: false,
+                                              success: function(html){
+                                                  $('#3335_duped_list').html("");
+                                                  $('#3335_duped_list').append(html);
+                                              }
+                                          });
+                                      }
+
+                                      doGet3335List(10);
+
+                                  </script>
+
                                
                                
                             
@@ -2991,7 +2774,12 @@
                                 
 								<?php  echo renderChart("Charts/StackedColumn2D.swf", "", "$strXML", "eservice_users", 325, 250, false, true);?>
                                 </div>
-                                
+
+
+                                <input type="hidden" id="user_filter_sql_approval" value="<?php echo $user_filter_sql_approval;?>">
+                                <input type="hidden" id="zone_sql" value="<?php echo $zone_sql;?>">
+
+
                                 
                                 <div style="padding: 15px;">
                             
@@ -3003,163 +2791,39 @@
                                 
                                 </div>
                             
-                            	<table border="1" style="border:1px solid #CCC; border-collapse: collapse; <?php
-									//if(($sess_accesslevel == 3 && !$sess_can_manage_user) || $sess_accesslevel == 8){
-									if($sess_accesslevel == 8){
-										
-										//yoes 20161201 --> allow ALL except 8 to see this
-										echo "display: none;";
-									}
-								?>">
-                                	<tr>
-                                    	<td colspan="5">
-                                     	<div align="center"  style=" color:#060">
-                                        สถานประกอบการ สมัครใช้งานระบบ
-                                        </div>
-                                        </td>
-                                    </tr>
-                                    
-                                     <tr>
-                                    	<td align="center">
-                                        <div align="center">
-                                     	 วันที่สมัคร
-                                          </div>
-                                        </td>
-                                    	<td align="center">
-                                        <div align="center">
-                                     	 ชื่อสถานประกอบการ
-                                          </div>
-                                        </td>
-                                    	<td align="center"><div align="center"> จังหวัด </div></td>
-                                    	<td align="center">
-                                        <div align="center">
-                                     	 username
-                                          </div>
-                                        </td>
-                                    	<td align="center"><div align="center"> จำนวนเอกสารยืนยันตนที่แนบมา </div></td>
-                                    </tr>
+
                                     
                                     
-                                    <?php 
-									
-									
-									
-									
-									
-									$sql = "
-									
-									SELECT * FROM users a left outer join company z on a.user_meta = z.cid where 1=1 and user_enabled like '%0%' and AccessLevel like '%4%' 
-									
-									$user_filter_sql_approval
-									
-									$zone_sql
-									
-									order by user_id asc
-									
-									";
-									
-									
-									//echo $sql;
-									
-									$submit_result = mysql_query($sql);
-									
-									
-									while($post_row = mysql_fetch_array($submit_result)){
-									
-									
-									?>
+                                    <span id="dashboard_approval_list">
+                                    <?php
+
+                                        //include "ajax_dashboard_get_approval_list.php";
+
+                                    ?>
+                                    </span>
+
+                                    <script>
+
+                                        function doGetApprovalList(the_limit, do_hide_more = 0){
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "ajax_dashboard_get_approval_list.php",
+                                                data: "the_limit="+the_limit+"&do_hide_more="+do_hide_more+"&user_filter_sql_approval="+$('#user_filter_sql_approval').val()+"&zone_sql="+$('#zone_sql').val(),
+                                                cache: false,
+                                                success: function(html){
+                                                    $('#dashboard_approval_list').html("");
+                                                    $('#dashboard_approval_list').append(html);
+                                                }
+                                            });
+                                        }
+
+                                        doGetApprovalList(10);
+
+                                    </script>
+
+
                                     
-                                    
-                                    <tr>
-                                    	<td >
-                                       	<?php echo formatDateThaiShort($post_row[user_created_date]);?>
-                                        </td>
-                                    	<td >
-                                       <?php 
-									   
-									   $this_company_row = getFirstRow("select * from company where cid = '".$post_row["user_meta"]."'");
-										
-										//echo formatCompanyName($this_company_row["CompanyNameThai"] , $this_company_row["CompanyTypeCode"]);
-										//echo $this_company_row["CompanyNameThai"];
-										
-										echo formatCompanyName($this_company_row["CompanyNameThai"],$this_company_row["CompanyTypeCode"]);
-									   
-									   ?>
-                                        </td>
-                                    	<td ><?php 
-									  
-									  
-									  echo getFirstItem("select province_name from provinces where province_id = '".$this_company_row["Province"]."'");
-									  
-									  ?></td>
-                                        <td >
-                                       <a href="view_user.php?id=<?php echo doCleanOutput($post_row["user_id"]);?>"><?php echo ($post_row["user_name"]);?></a>   
-                                        </td>
-                                        <td >
-                                        
-                                        <?php 
-										
-											$count_self_doc = getFirstItem("
-															
-															
-																select
-																	count(*)
-																from
-																	files 
-																where
-																	file_type in (
-																		
-																		
-																		'register_doc_1'
-																		, 'register_doc_22'
-																		, 'register_employee_card'
-																		, 'register_company_card'
-																	
-																	)
-																	
-																and
-																
-																file_for = '".$post_row["user_id"]."'
-															
-															
-															");
-															
-															
-												$the_font_color = "red";
-												$the_doc_text = "ยังส่งเอกสารยืนยันตนไม่ครบ";
-												$the_doc_text_2 = "";
-												
-												if($count_self_doc >= 4){
-													
-													$the_font_color = "green";
-													$the_doc_text = "ส่งเอกสารยืนยันตนครบแล้ว";
-													$the_doc_text_2 = "<br><b>สถานประกอบการส่งเอกสารยืนยันตนครบแล้ว รอการอนุมัติจากเจ้าหน้าที่</b>";
-												}
-										
-										
-												
-										?>
-                                        
-                                        <div align="center" title="<?php echo $the_doc_text;?>">
-                                        
-                                        	<font color=<?php echo $the_font_color;?>>
-											<?php 
-                                                
-                                                echo $count_self_doc ; //. $the_doc_text_2;
-                                            
-                                            ?> / 4
-                                            
-                                            </font>
-                                        
-                                        </div>
-                                        
-                                        </td>
-                                    </tr>
-                                    
-                                    
-                                    <?php }?>
-                                    
-                                </table>
+
                              </div>
                            
                            

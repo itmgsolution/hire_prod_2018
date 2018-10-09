@@ -293,9 +293,9 @@ $year_date = 365;
 								
 								and
 							
-								date(company_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+								company_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 								and
-								date(lawfulness_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+								lawfulness_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 								
 								
 										";		
@@ -391,9 +391,9 @@ $year_date = 365;
 								
 								and
 							
-								date(company_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+								company_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 								and
-								date(lawfulness_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+								lawfulness_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 								
 										";												
 										
@@ -528,9 +528,9 @@ $year_date = 365;
 							
 							and
 							
-							date(company_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+							company_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 							and
-							date(lawfulness_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+							lawfulness_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 							
 									";
 		
@@ -593,9 +593,9 @@ $year_date = 365;
 							
 							and
 							
-							date(company_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+							company_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 							and
-							date(lawfulness_snapshot.snapshot_date) = SUBDATE(CURDATE(),1)
+							lawfulness_snapshot.snapshot_date = SUBDATE(CURDATE(),1)
 							
 									";
 							
@@ -751,7 +751,7 @@ $year_date = 365;
 					
 					$left_table = "lawfulness_snapshot";
 					
-					$left_snapshot_date = " and date(a.snapshot_date) = '".date('Y-m-d',strtotime(date("Y-m-d") . "-1 days"))."' ";
+					$left_snapshot_date = " and a.snapshot_date = '".date('Y-m-d',strtotime(date("Y-m-d") . "-1 days"))."' ";
 				}
 				
 				if($_POST[do_compare_02] == 2){
@@ -759,7 +759,7 @@ $year_date = 365;
 					
 					$right_table = "lawfulness_snapshot";
 					
-					$right_snapshot_date = " and date(b.snapshot_date) = '".date('Y-m-d',strtotime(date("Y-m-d") . "-1 days"))."' ";
+					$right_snapshot_date = " and b.snapshot_date = '".date('Y-m-d',strtotime(date("Y-m-d") . "-1 days"))."' ";
 					
 					
 				}elseif($_POST[do_compare_02] == 3){
@@ -767,7 +767,7 @@ $year_date = 365;
 					
 					$right_table = "lawfulness_snapshot";
 					
-					$right_snapshot_date = " and date(b.snapshot_date) = '".date('Y-m-d',strtotime(date("Y-m-d") . "-2 days"))."' ";
+					$right_snapshot_date = " and b.snapshot_date = '".date('Y-m-d',strtotime(date("Y-m-d") . "-2 days"))."' ";
 				}
 				
 				//echo formatDateThai(date("Y-m-d"));

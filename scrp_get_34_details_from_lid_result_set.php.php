@@ -19,15 +19,6 @@ while($result_row = mysql_fetch_array($the_result)){
 		
 		//starting new loop
 		
-		
-	
-		//yoes 20160119 --- wont need this
-		/*
-		if($maimad_paid > $last_num_needed){
-			$maimad_paid = $last_num_needed;
-		}
-		*/
-		
 		//yoes 20160201 --> handle the "จ่ายเกิน" case
 		if($paid_money > $start_money){
 			
@@ -69,6 +60,27 @@ while($result_row = mysql_fetch_array($the_result)){
 		
 		//how much this guy have to pay?
 		$start_money = $result_row[num_needed]*$year_date*$the_wage;
+		
+		//echo $result_row[num_needed]; 
+		
+		$deducted_33 = 0;
+		if($the_year >= 2018 && $the_year < 2050){
+			
+			$start_money = $result_row[company_ratio]*$year_date*$the_wage;
+			
+			$deducted_33 = get33DeductionByCIDYear($result_row[cid], $the_year);
+			//echo $deducted_33;
+						
+			if($deducted_33 > $start_money){
+				$deducted_33 = $start_money;
+			}
+			
+			$start_money -= $deducted_33;
+			
+		}
+		
+		//yoes 20180209
+		
 		//echo $start_money . "<br>";
 		
 		$owned_money = $start_money;

@@ -17,8 +17,8 @@ if($sess_accesslevel == 1){
                               <td><div align="center">อายุ</div></td>
                               <td><div align="center">เลขที่บัตรประชาชน</div></td>
                               <td><div align="center">ผู้ใช้สิทธิเป็น</div></td>
-                              <td><div align="center">วันเริ่มต้นสัญญา</div></td>
-                              <td><div align="center">วันสิ้นสุดสัญญา</div></td>
+                              <td><div align="center">เลขที่สัญญา</div></td>
+                              <td><div align="center">วันเริ่มต้นสัญญา-วันสิ้นสุดสัญญา</div></td>
                               <td><div align="center">ระยะเวลา</div></td>
                               <td><div align="center">กิจกรรม</div></td>
                               <td><div align="center">มูลค่า (บาท)</div></td>
@@ -124,8 +124,18 @@ if($sess_accesslevel == 1){
                               </td>
                               
                               
-                              <td style="border-top:1px solid #999999;"><?php echo formatDateThai($post_row["curator_start_date"]);?></td>
-                                <td style="border-top:1px solid #999999;"><?php echo formatDateThai($post_row["curator_end_date"]);?></td>
+                              <td style="border-top:1px solid #999999;"><?php echo $post_row["curator_contract_number"];?></td>
+                                <td style="border-top:1px solid #999999;"><?php 
+								
+								
+									echo formatDateThai($post_row["curator_start_date"]);
+									
+									
+									if($post_row["curator_end_date"]){
+										echo "-". formatDateThai($post_row["curator_end_date"]);
+									}
+									
+									?></td>
                                 
                                 <td style="border-top:1px solid #999999;"><?php 
                                 
