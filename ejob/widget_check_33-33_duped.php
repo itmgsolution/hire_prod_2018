@@ -1,9 +1,4 @@
-<?php 
-
-
-//echo "-".$post_row["le_is_dummy_row"]."-"; 
-
-if($post_row["le_is_dummy_row"] == "0"){?>
+<?php if($post_row["le_is_dummy_row"] == "0"){?>
 
 	 <?php 
                              
@@ -24,12 +19,26 @@ if($post_row["le_is_dummy_row"] == "0"){?>
 		$this_lawful_year = $this_lawful_year;
         
         
-        $sql = "select * from lawful_employees_company where le_code = '$this_le_code'
-                    and le_id != '$this_le_id' and le_year = '$this_lawful_year'
-                    
+        $sql = "select 
+					* 
+				from 
+					lawful_employees a
+						join
+							company b
+							on
+							le_cid = cid												
+							and 
+							b.CompanyTypeCode < 200
+				
+				where 
+					le_code = '$this_le_code'
+                    and le_id != '$this_le_id' 
+					and le_year = '$this_lawful_year'                    
                     and le_is_dummy_row = 0
                     
                     ";
+
+        //echo $sql;
       
       
       

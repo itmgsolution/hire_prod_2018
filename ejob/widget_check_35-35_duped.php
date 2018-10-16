@@ -1,18 +1,26 @@
  <?php 							  
 		//yoes 20160301 only check dupe on non-dummy rows
-		if(!$post_row["curator_is_dummy_row"]){								
+		//yoes 20171130 and card_id !== 0
+		if(!$post_row["curator_is_dummy_row"] && $this_curator_idcard*1 != 0){								
   ?>
 	  	  
 							  
 							  <?php 
 								
-								$sql = "select 
+								$sql = "
+									select 
 									* 
 									from 
-									curator_company a, lawfulness_company b
+								  curator a, lawfulness b, company c
 									
 									where 
 									a.curator_lid 	= b.LID
+									
+									and
+									b.cid = c.cid
+									and
+									c.CompanyTypeCode < 200
+									
 									and
 									curator_idcard = '$this_curator_idcard'
 									and
@@ -48,7 +56,7 @@
 									
 									
 											<span style="color:#990000" title="กรุณาติดต่อเจ้าหน้าที่เพื่อตรวจสอบข้อมูลเพิ่มเติม">
-											! พบในสถานประกอบการอื่น <br />
+											! พบการใช้สิทธิในมาตรา 35 ของสถานประกอบการอื่นแล้ว<br />
 											</span>
 								  
 									
@@ -56,11 +64,32 @@
 									<?php }else{ ?>
 								  
 							  
+							  			<?php 
+										
+										//yoes 20170220 --- more detailed message
+										if($this_cid == $this_company_id){	
+										
+										
+										?>
+										
+											<font color="#CC3300"><strong>! มีการใส่ข้อมูล ม.35 นี้ไปแล้ว</strong></font>
+										
+                                        <?php 
+                                        
+										}else{
+										
+										?>
 							  
-							  
-										  <div>
-											<a href="organization.php?id=<?php echo $this_company_id;?>&curate=curate&focus=lawful&year=<?php echo $this_the_year;?>" style="color:#006600; text-decoration:underline;" target="_blank">! พบในมาตรา 35 ของสถานประกอบการอื่น</a>
-										  </div>
+                                              <div>
+                                                <a href="organization.php?id=<?php echo $this_company_id;?>&curate=curate&focus=lawful&year=<?php echo $this_the_year;?>" style="color:#006600; text-decoration:underline;" target="_blank">! พบในมาตรา 35 ของสถานประกอบการอื่น</a>
+                                              </div>
+                                          
+                                          
+                                          <?php 
+										  
+										}
+										  
+										  ?>
 							  
 							  
 									  <?php }?>

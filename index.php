@@ -87,7 +87,7 @@
 </table>
 <?php //yoes 20170213 -- set faux cron here ?>
 <script>
-	$.get("ajax_do_snapshot.php");
+	//$.get("ajax_do_snapshot.php");
 </script>
 
 </body>

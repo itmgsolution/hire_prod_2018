@@ -71,6 +71,11 @@
        <a href="index.php"  class="glink" style="color:#000000;"> 
 	  หน้าแรก</a>
       
+      
+       <a href="gjob.dep.go.th"  class="glink" style="color:#000000;"> 
+      ระบบรายงานผลหน่วยงานภาครัฐ
+      </a>
+      
 		<?php 
 			
 			if($sess_accesslevel == 4){

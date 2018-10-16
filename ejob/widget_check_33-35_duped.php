@@ -14,10 +14,15 @@
 		  $sql = "select 
 				* 
 				from 
-				curator_company a, lawfulness_company b
+				curator a, lawfulness b, company c
 				
 				where 
 				a.curator_lid 	= b.LID
+				
+				and
+				b.cid = c.cid
+				and
+				c.CompanyTypeCode < 200
 				
 				and
 				curator_idcard = '$this_le_code'

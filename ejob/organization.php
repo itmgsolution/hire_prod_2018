@@ -1447,86 +1447,7 @@ $is_2013 = 1;
                     
                     
                     
-                    <?php 
-						//if($this_year >= 2013){ //only show this for years more than 2013
-						//if(1==1){	
-					?>
                   
-                 	  <tr>
-                        <td colspan="4">
-                        
-                        
-                        	<?php if($mode != "new"){ ?>
-                        	<div style="font-weight: bold; padding:5px 0 5px 0;">
-                            
-                            	ข้อมูลสาขา ประจำปี <?php echo $this_year+543;?>
-                              
-                            
-                            </div>
-                            <?php }?>
-                            
-                            
-                             <?php if($sess_accesslevel == 4 && $mode != "new"){ ?>
-                            <div style="padding:5px 0 5px 0; ">
-                                
-                                กรุณาใส่จำนวนลูกจ้างทั้งหมด ที่ทำงานในแต่ละสาขา <?php //echo "ปี ".$this_year;?>
-                                <br />
-                                จำนวนลูกจ้างรวมทั้งหมดทุกสาขา จะถูกนำไปใช้ในการคำนวณการปฏิบัติตามกฏหมาย
-                                <br />
-                                กรณีที่สาขาปิดไปแล้ว ให้ใส่จำนวนลูกจ้างเป็น 0 คน
-                                
-                                <br />
-                                ต้องการเพิ่มข้อมูลสาขาใหม่ที่ไม่มีอยู่ในรายการ <a href="#" onclick="fireMyPopup('company_branch_popup',600,250); return false;">ให้คลิกที่นี่</a>
-                                
-                                
-                                
-                            
-                            </div>
-							<?php }?>
-                            
-                            </td>
-                      </tr>
-                      <tr>
-                        <td colspan="4">
-                        
-                        
-                        		
-                        
-                        		<div id="branch_info_general" >
-                                    <?php 
-									
-									
-									if($mode != "new"){
-									
-										//20151102
-										//see if this company got submmited or not
-										 $submitted_company_lawful = getFirstItem("
-																				select 
-																					lawful_submitted
-																				from
-																					lawfulness_company
-																				where
-																					CID = '" . $this_cid . "'
-																					and
-																					Year = '".$this_year."'
-																				");
-										
-										include "organization_branch_table.php";
-										
-									}
-									
-									?>
-                               </div>
-                                
-                               
-                                
-                                
-                        
-                        </td>
-                      </tr>
-                      
-                      
-                      <?php // }?>
                       
                       
                       
@@ -2311,6 +2232,8 @@ $is_2013 = 1;
 												
 											//echo $this_cid;
 											//print_r($submitted_row);
+								
+											$lawful_submitted = $submitted_row[lawful_submitted];
 											
 											if($submitted_row[lawful_submitted] == 1 || $submitted_row[lawful_submitted] == 2){
 												
@@ -2326,7 +2249,13 @@ $is_2013 = 1;
 												
 											}
 									   
+										
+								
+								
+								
 									   ?>
+                                           
+                                           
                                             
                                    </div>                                  </td>
                                   
@@ -3253,7 +3182,83 @@ $is_2013 = 1;
 							  	?>
                               	</td>
                                 </tr>
+                                
+                                
+                                  <?php 
+						//if($this_year >= 2013){ //only show this for years more than 2013
+						//if(1==1){	
+					?>
+                  
+                 	  <tr>
+                        <td colspan="4">
+                        
+                        
+                             <?php if($sess_accesslevel == 4 && $mode != "new"){ ?>
+                            <div style="padding:5px 0 5px 0; ">
+                                
+                                กรุณาใส่จำนวนลูกจ้างทั้งหมด ที่ทำงานในแต่ละสาขา <?php //echo "ปี ".$this_year;?>
+                                <br />
+                                จำนวนลูกจ้างรวมทั้งหมดทุกสาขา จะถูกนำไปใช้ในการคำนวณการปฏิบัติตามกฏหมาย
+                                <br />
+                                กรณีที่สาขาปิดไปแล้ว ให้ใส่จำนวนลูกจ้างเป็น 0 คน
+                                
+                                <br />
+                                ต้องการเพิ่มข้อมูลสาขาใหม่ที่ไม่มีอยู่ในรายการ <a href="#" onclick="fireMyPopup('company_branch_popup',600,250); return false;">ให้คลิกที่นี่</a>
+                                
+                                
+                                
+                            
+                            </div>
+							<?php }?>
+                            
+                            </td>
+                      </tr>
+                      <tr>
+                        <td colspan="4">
+                        
+                        
+                        		
+                        
+                        		<div id="branch_info_general" >
+                                    <?php 
+									
+									
+									if($mode != "new"){
+									
+										//20151102
+										//see if this company got submmited or not
+										 $submitted_company_lawful = getFirstItem("
+																				select 
+																					lawful_submitted
+																				from
+																					lawfulness_company
+																				where
+																					CID = '" . $this_cid . "'
+																					and
+																					Year = '".$this_year."'
+																				");
+										
+										include "organization_branch_table.php";
+										
+									}
+									
+									?>
+                               </div>
+                                
+                               
+                                
+                                
+                        
+                        </td>
+                      </tr>
+                      
+                      
+<?php // }?>
                             </table>
+                            
+                            
+                            
+                            
                           </form>
                             <script language='javascript'>
 							
@@ -4123,10 +4128,57 @@ $is_2013 = 1;
                                               
                                              
                                              <br />
+											 
+
                                             
                                               
                                               </td>
                                             </tr>
+											
+											
+											<?php 
+											  
+											if(!$submitted_company_lawful){ 
+											 ?>
+											
+											<tr>
+											
+												<td colspan=2>
+													<hr>
+														 <table>
+															<tr>
+																<td>
+																
+																
+															   นำเข้าข้อมูลคนพิการมาตรา 33
+																
+																</td>
+															  
+																<td>
+																<input name="upload_file_m33" type="file" /> <input name="upload_file_statement" type="submit" value="Upload File" />                            </td>
+															</tr>
+															
+															
+															<tr>
+															  <td>&nbsp;</td>
+															 
+															  <td>
+															  
+															  <a href="m33_sample.xls">ตัวอย่างไฟล์นำเข้า</a>
+															  
+															 
+															  </td>
+														  </tr>
+														 
+													   </table>
+													<hr>
+												</td>
+											</tr>
+											
+											<?php
+											}
+										    ?>
+											
                                             
                                             </table>
                                             
@@ -4195,7 +4247,7 @@ $is_2013 = 1;
                                              <tr >
                                              <tr bgcolor="#fcfcfc" >
                                             <td>
-                                                <img id="ex334" src="exclaim_small.jpg" title="กรุณาแนบไฟล์" style="padding: 5px;" />
+                                                
                                               </td>
                                               <td>
                                               	สำเนา สปส 1-10 ส่วนที่ 2 ที่มีชื่อคนพิการประจำเดือน ม.ค.<?php echo ($this_year > 3000 ? $this_year+543-1000 : $this_year+543) ;?>
@@ -4204,15 +4256,22 @@ $is_2013 = 1;
                                               <td>
                                               	<?php 
 												
-													$required_doc++;                                                  
+													//$required_doc++; 
+													$pre_disable_delete = $disable_delete;
+													$disable_delete = 0;
 												  	$file_type = "company_33_docfile_4";
                                                     include "doc_file_links.php";
+													$disable_delete = $pre_disable_delete;
                                                  
                                                 ?>
-                                                <?php if($have_doc_file){$required_doc--;?><br /><script>$('#ex334').hide();</script><?php }?>
-                                                <?php if(! $submitted_company_lawful){?>
+                                               
+                                                
                                                <input type="file" name="company_33_docfile_4" id="company_33_docfile_4" />
+                                               
+                                               <?php if($submitted_company_lawful){?>
+                                               <br><input type="submit" name="submit_lawful" id="submit_lawful" value="แนบไฟล์"/>
                                                <?php }?>
+                                               
                                               </td>
                                             </tr>
                                              <tr bgcolor="#fcfcfc">
@@ -5820,8 +5879,12 @@ document.getElementById('rule_34_table').style.display = 'none';
     
    
     </td>
-    <td></td>
+    <td>
+	
+	</td>
   </tr>
+  
+  							
   
   
  
@@ -5902,6 +5965,50 @@ document.getElementById('rule_34_table').style.display = 'none';
     </td>
     <td></td>
   </tr>
+  
+  
+  <?php 
+											  
+if(!$submitted_company_lawful){ 
+ ?>
+											
+  
+  <tr>
+		<td ></td>						
+		<td colspan=2>
+			<hr>
+				 <table>
+					<tr>
+						<td>
+						
+					   นำเข้าข้อมูลการให้สัมปทานฯมาตรา 35
+						
+						</td>
+					  
+						<td>
+						<input name="upload_file_m35" type="file" /> <input name="upload_file_statement" type="submit" value="Upload File" />                            </td>
+					</tr>
+					
+					
+					<tr>
+					  <td>&nbsp;</td>
+					 
+					  <td>
+					  
+					  <a href="m35_sample.xls">ตัวอย่างไฟล์นำเข้า</a>
+					  
+					 
+					  </td>
+				  </tr>
+				 
+			   </table>
+			<hr>
+		</td>
+	</tr>
+			
+			
+<?php }?>
+				
    
 </table>
 
@@ -6171,7 +6278,7 @@ if($sess_accesslevel == 4 && $extra_employee > 0){ // company do whatever compan
                   
                   <tr>
                 	  <td>วันที่ต้องการชำระเงิน</td>
-                	  <td>
+                	  <td colspan=3>
                       
                       <?php 
 					  
@@ -6429,7 +6536,10 @@ if($sess_accesslevel == 4 && $extra_employee > 0){ // company do whatever compan
                                   </td>
                               </tr>
                               
-                              <?php if(!$submitted_company_lawful){?>
+                              <?php 
+												  
+								//yoes20180320				  
+								if(!$submitted_company_lawful || 1==1){?>
                               <tr bgcolor="#fcfcfc">
                               	<td colspan="6">
                                 
@@ -9270,7 +9380,7 @@ if($sess_accesslevel == 4 || ($count_info && $sess_accesslevel == 1)){ // only c
                                             
                                            
                                             
-                                            <?php if($sess_accesslevel != 5 && $sess_accesslevel != 18 && !$is_read_only && $sess_accesslevel != 4 && !$case_closed){//company and exec can't do all these?>
+                                            <?php if($sess_accesslevel != 5 && $sess_accesslevel != 18 && !$is_read_only  && !$case_closed){//company and exec can't do all these?>
                                             <input id="btn_get_data" type="button" value="ดึงข้อมูล" onClick="return doGetData();" />
                                             <?php }?>
                                             
@@ -9710,12 +9820,30 @@ if($sess_accesslevel == 4 || ($count_info && $sess_accesslevel == 1)){ // only c
                                                 
                                             </div></td>
                                           </tr>
+										  
+										   
+										  
                                           <input name="le_year" type="hidden" value="<?php echo $this_lawful_year;?>" />
                                           <input name="le_cid" type="hidden" value="<?php echo $this_id; ?>" />
                                           
                                           <input name="case_closed" type="hidden" value="<?php echo  default_value($leid_row["is_extra_row"], $case_closed); ?>" />
                                          
                                     </form>
+                                    
+                                   		 <tr >
+											<td colspan="10">
+											
+												<hr>
+											
+												<div align="center">
+													<form method="post" action="scrp_import_last_lawful_employee.php"  onsubmit="return confirm('ต้องการนำเข้าข้อมูลคนพิการที่ได้รับเข้าทำงานจากปีที่แล้วมาใส่ในปีนี้?');">
+														<input name="le_year" type="hidden" value="<?php echo $this_lawful_year;?>" />
+														<input name="le_cid" type="hidden" value="<?php echo $this_id; ?>" />
+														<input name="import_last_le" type="submit" value="นำเข้าข้อมูลจากปีที่แล้ว" />
+													</form>  
+												</div>
+											</td>
+										 </tr>
                                     
                                       </table>
                                       

@@ -66,6 +66,14 @@ if($sess_accesslevel == 1){
 								}else{
 									$the_bg = "bgcolor='#ffffff'";
 								}
+								
+								
+								//yoes 20160707 - moved this here from widget_check_35-35_duped.php
+								$this_curator_idcard = $post_row["curator_idcard"];
+								$this_curator_id = $post_row["curator_id"];
+								$this_le_cid = $post_row["le_cid"];
+								$this_le_year = $post_row["le_year"];
+								
 						
                         ?>
                              <tr <?php echo $the_bg;?>>
@@ -80,134 +88,22 @@ if($sess_accesslevel == 1){
                               <?php echo doCleanOutput($post_row["curator_idcard"]);?>
                               
                               
-						  <?php 							  
-                                //yoes 20160301 only check dupe on non-dummy rows
-                                if(!$post_row["curator_is_dummy_row"]){								
-                          ?>
-                              
-                               <?php 
-							   
-							   
-                                                      
-                                                        //see if this le_id already in another ID
-                                                        
-                                                        $this_curator_idcard = $post_row["curator_idcard"];
-                                                        $this_curator_id = $post_row["curator_id"];
-                                                        $this_le_cid = $post_row["le_cid"];
-                                                        $this_le_year = $post_row["le_year"];
-                                                        
-                                                        $sql = "select * from lawful_employees_company
-															 	where 
-																le_code = '$this_curator_idcard'
-                                                                and 
-																le_year = '$this_lawful_year'
-																and
-																le_is_dummy_row = 0
-                                                                ";
-                                                      
-                                                        //echo $sql;
-                                                      
-                                                        $le_result = mysql_query($sql);
-                                                        
-                                                        while ($le_row = mysql_fetch_array($le_result)) {
-                                                    
-                                                      
-                                                      ?>
-                                                      
-                                                      
-                                                      	 <?php 
-												
-															//yoes 20151118 -- make it so company can see link
-															if($sess_accesslevel == 4){
-															
-															?>
-															
-															
-															
-                                                                <span style="color:#990000" title="กรุณาติดต่อเจ้าหน้าที่เพื่อตรวจสอบข้อมูลเพิ่มเติม">
-                                                                ! คนพิการนี้มีการทำมาตรา 33 แล้ว <br />
-                                                                </span>
-														  
-															
-															
-															<?php }else{ ?>
-														  
-                                                              <div>
-                                                                <a href="organization.php?id=<?php echo $le_row["le_cid"];?>&le=le&focus=lawful&year=<?php echo $le_row["le_year"];?>" style="color:#990000; text-decoration:underline;" target="_blank">! พบในมาตรา 33</a>
-                                                              </div>
-														  
-														  
-														  <?php }?>
-                                                      
-                                                      <?php }?>
-                                                      
-                                                      
-                                                      <?php 
-                                                        
-                                                        $sql = "select 
-                                                            * 
-                                                            from 
-                                                            curator_company a, lawfulness_company b
-                                                            
-                                                            where 
-                                                            a.curator_lid 	= b.LID
-                                                            and
-                                                            curator_idcard = '$this_curator_idcard'
-                                                            and
-                                                            curator_id != '$this_curator_id'
-                                                            and
-                                                            year = '$this_lawful_year'
-															and
-															curator_is_dummy_row = 0
-                                                        ";
-                                                      
-                                                      
-                                                      //echo $sql;
-                                                        $le_result = mysql_query($sql);
-                                                        
-                                                        while ($le_row = mysql_fetch_array($le_result)) {
-                                                    
-                                                        $lawfulness_row = getFirstRow("select CID,Year from lawfulness where lid = '".$le_row["curator_lid"]."'");
-                                                        
-                                                        $this_company_id = $lawfulness_row["CID"];
-                                                        $this_the_year = $lawfulness_row["Year"];
-                                                      
-                                                      ?>
-                                                      
-                                                      		   <?php 
-												
-															//yoes 20151118 -- make it so company can see link
-															if($sess_accesslevel == 4){
-															
-															?>
-															
-															
-															
-                                                                    <span style="color:#990000" title="กรุณาติดต่อเจ้าหน้าที่เพื่อตรวจสอบข้อมูลเพิ่มเติม">
-                                                                    ! พบในสถานประกอบการอื่น <br />
-                                                                    </span>
-														  
-															
-															
-															<?php }else{ ?>
-														  
-                                                      
-                                                      
-                                                      
-                                                                  <div>
-                                                                    <a href="organization.php?id=<?php echo $this_company_id;?>&curate=curate&focus=lawful&year=<?php echo $this_the_year;?>" style="color:#006600; text-decoration:underline;" target="_blank">! พบในมาตรา 35 ของสถานประกอบการอื่น</a>
-                                                                  </div>
-                                                      
-                                                      
-		                                                      <?php }?>
-                                                      
-                                                      <?php }?>
-                                                      
-                              
-                               <?php 							  
-									//yoes 20160301 only check dupe on non-dummy rows
-									} //end if(!$post_row["curator_is_dummy_row"]){								
-							  ?>                
+						 	  <?php 
+							  
+							  	//yoes 20160707 -- only check this if "is_disable
+							  	
+								if($post_row["curator_is_disable"]){
+								
+									//yoes 20160503 --> turned this into widget
+									include "widget_check_35-33_duped.php";
+									
+									
+									//yoes 20160503 --> turned this into widget
+									include "widget_check_35-35_duped.php";
+								
+								}
+								
+								?>
                                                       
                               
                               </td>
@@ -476,124 +372,15 @@ if($sess_accesslevel == 1){
 								  <?php echo doCleanOutput($sub_row["curator_idcard"]);?>
                                   
                                   
-                             <?php 							  
-								//yoes 20160301 only check dupe on non-dummy rows
-								if(!$sub_row["curator_is_dummy_row"]){								
-						    ?>
                                   
-                                   <?php 
-                                          
-                                            //see if this le_id already in another ID
-                                            
-                                            $this_curator_idcard = $sub_row["curator_idcard"];
-                                            $this_curator_id = $sub_row["curator_id"];
-                                            $this_le_cid = $sub_row["le_cid"];
-                                            $this_le_year = $sub_row["le_year"];
-                                            
-                                            $sql = "select * from lawful_employees where le_code = '$this_curator_idcard'
-													and le_year = '$this_lawful_year'
-													";
-                                          
-                                          	//echo $sql;
-                                          
-                                            $le_result = mysql_query($sql);
-                                            
-                                            while ($le_row = mysql_fetch_array($le_result)) {
-										
-                                          
-                                          ?>
-                                          
-                                          		 <?php 
-												
-												//yoes 20151118 -- make it so company can see link
-												if($sess_accesslevel == 4){
-												
-												?>
-												
-												
-												
-													<span style="color:#990000" title="กรุณาติดต่อเจ้าหน้าที่เพื่อตรวจสอบข้อมูลเพิ่มเติม">
-													! คนพิการนี้มีการทำมาตรา 33 แล้ว <br />
-													</span>
-											  
-												
-												
-												<?php }else{ ?>
-                                          
-                                          
-                                                      <div>
-                                                        <a href="organization.php?id=<?php echo $le_row["le_cid"];?>&le=le&focus=lawful&year=<?php echo $le_row["le_year"];?>" style="color:#990000; text-decoration:underline;" target="_blank">! พบในมาตรา 33</a>
-                                                      </div>
-                                                      
-                                                  <?php }?>
-                                          
-                                          <?php }?>
-                                          
-                                          
-                                          <?php 
-                                            
-                                             $sql = "select 
-												* 
-												from 
-												curator a, lawfulness b
-												
-												where 
-												a.curator_lid 	= b.LID
-												and
-												curator_idcard = '$this_curator_idcard'
-												and
-												curator_id != '$this_curator_id'
-												and
-												year = '$this_lawful_year'
-											";
-                                          
-                                          
-                                          
-                                            $le_result = mysql_query($sql);
-                                            
-                                            while ($le_row = mysql_fetch_array($le_result)) {
-                                        
-                                            $lawfulness_row = getFirstRow("select CID, Year from lawfulness where lid = '".$le_row["curator_lid"]."'");
-                                            
-                                            $this_company_id = $lawfulness_row["CID"];
-                                            $this_the_year = $lawfulness_row["Year"];
-                                          
-                                          ?>
-                                          
-                                         		 <?php 
-												
-												//yoes 20151118 -- make it so company can see link
-												if($sess_accesslevel == 4){
-												
-												?>
-												
-												
-												
-														<span style="color:#990000" title="กรุณาติดต่อเจ้าหน้าที่เพื่อตรวจสอบข้อมูลเพิ่มเติม">
-														! พบในสถานประกอบการอื่น<br />
-														</span>
-											  
-												
-												
-												<?php }else{ ?>
-                                          
-                                          
-                                          
-                                                  <div>
-                                                    <a href="organization.php?id=<?php echo $this_company_id;?>&curate=curate&focus=lawful&year=<?php echo $this_the_year;?>" style="color:#006600; text-decoration:underline;" target="_blank">! พบในมาตรา 35 ของสถานประกอบการอื่น</a>
-                                                  </div>
-                                                  
-                                                  <?php }?>
-                                          
-                                          <?php }?>
-                                          
-                                          
-                                <?php 							  
-									//yoes 20160301 only check dupe on non-dummy rows
-									} //if(!$sub_row["curator_is_dummy_row"]){								
-								?>
-                                
-                                
+                                  <?php 
+								  	
+									//yoes 20160707 --- also check duped here									
+									include "widget_check_35-33_duped.php";
+									include "widget_check_35-35_duped.php";
+								  
+								  ?>
+                                  
                                   
                                   </td>
                                   <td  valign="top"  colspan="9">ผู้ถูกใช้สิทธิ: <?php echo doCleanOutput($sub_row["curator_disable_desc"]);?></td>

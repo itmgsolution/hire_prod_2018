@@ -51,8 +51,8 @@
 			$sess_meta = $_SESSION['sess_meta'];
 			$sess_user_enabled = $_SESSION['sess_user_enabled'];
 			
-			//$sql = "update users set user_enabled = 0 where user_id = '$decoded_id'";
-			//mysql_query($sql);
+			$sql = "update users set user_enabled = 0 where user_id = '$decoded_id'";
+			mysql_query($sql);
 			
 		}
 		
@@ -68,6 +68,9 @@
 		//echo $sess_user_enabled; exit();
 		
 		$mode = "edit";	
+		
+		//echo $mode;
+		
 		$this_id = $sess_userid*1;
 		
 		$post_row = getFirstRow("select * 
@@ -126,11 +129,14 @@
 			$no_pass = 1;
 		}
 		
+		//echo "np : ".$no_pass; 
+		
 	}else{
 	
 		//only has "ADD" mode for now
 		$mode = "add";	
 		$this_id = "new";
+		
 	
 	}
 	
@@ -427,7 +433,7 @@
                           
                           	 <tr>
                                 <td colspan="4"><hr />
-                                <span style="font-weight: bold">ข้อมูสถานประกอบการ</span></td>
+                                <span style="font-weight: bold">ข้อมูลสถานประกอบการ</span></td>
                               </tr>
                               
                               
@@ -794,10 +800,10 @@
                               
                              
                              
-                             <?php if($mode == "edit"){?>
+                            
                              
                              
-                              <tr id="password_row_1">
+                            <tr id="password_row_1">
                                 <td><span class="style86" style="padding: 10px 0 10px 0;">
                                 
                                
@@ -811,7 +817,7 @@
                                 
                                 <span class="style86" style="padding: 10px 0 10px 0;">
                                 
-                                <?php if(!$no_pass){?>
+                                <?php if(!$no_pass && $mode != "add"){?>
                                 <a id="change_pass_link" href="#" onclick="doShowPass(); return false;">ต้องการเปลี่ยนรหัสผ่าน คลิกที่นี่</a>
                                 <?php }?>
                                 
@@ -828,7 +834,7 @@
                               </tr>
                               
                               
-                              <tr id="password_row_2">
+                               <tr id="password_row_2">
                                 <td><span class="style86" style="padding: 10px 0 10px 0;">ยืนยัน Password</span></td>
                                 <td colspan="3"><span class="style86" style="padding: 10px 0 10px 0;">
                                 
@@ -848,8 +854,9 @@
                                   </span></span></td>
                                
                               </tr>
-                              
-                              <?php if(!$no_pass){?>
+							  
+							  
+							  <?php if(!$no_pass && $mode != "add"){?>
                               
                               <script>
 							  		$('#register_password').hide();
@@ -866,8 +873,7 @@
                               
                               <?php }?>
                               
-                              
-                              <?php }?>
+                             
                               
                              
                               
@@ -907,6 +913,8 @@
                                  
                                  </td>
                               </tr>
+
+
                               
                               
                               <tr>
@@ -944,6 +952,8 @@
                                  
                                  </td>
                               </tr>
+							  
+							  
                               
                               <?php }else{?>
                               
@@ -972,7 +982,80 @@
                                      
                                      </td>
                                   </tr>
-                              
+								  
+								  
+								  
+								  <?php if(1==0){?>
+								  <tr>
+									<td colspan="4">
+										<hr>
+											<div align=center>
+												<input type="button" value="เพิ่มข้อมูลกรรมการบริษัท" />
+											</div>
+										
+									</td>
+								  </tr>
+								  <?php }?>
+								  
+								  
+								  
+								  
+								  <?php for($i = 2; $i <= 3; $i++){ 
+								  
+								  
+									$contact_row = getFirstRow("
+													
+													
+												select
+													*
+												from
+													users_contacts
+												where
+													seq = '$i'
+													and
+													user_id = '$this_id'
+									
+									
+												");								  
+								  
+								  ?>
+								  
+								  <tr>
+									<td colspan="4">
+									
+									<strong>ข้อมูลกรรมการบริษัท <?php echo $i;?></strong></td>
+								  </tr>
+								  
+								  <tr>
+                                    <td valign="top">ชื่อ</td>
+                                    <td valign="top"><span class="style86" style="padding: 10px 0 10px 0;"><span class="style86" style="padding: 10px 0 10px 0;">
+                                      <input name="register_contact_name_2<?php echo $i;?>" type="text"  value="<?php echo $contact_row["FirstName"];?>" />
+                                    <span class="style86" style="padding: 10px 0 10px 0;"></span>                                </span></span></td>
+                                    <td valign="top">นามสกุล</td>
+                                    <td valign="top"><span class="style86" style="padding: 10px 0 10px 0;"><span class="style86" style="padding: 10px 0 10px 0;">
+                                      <input name="register_contact_lastname_2<?php echo $i;?>" type="text"  value="<?php echo $contact_row["LastName"];?>" />
+                                    <span class="style86" style="padding: 10px 0 10px 0;"></span>                                </span></span></td>
+                                  </tr>
+                                  <tr>
+                                   <td valign="top">เบอร์โทรศัพท์</td>
+                                    <td valign="top"><span class="style86" style="padding: 10px 0 10px 0;"><span class="style86" style="padding: 10px 0 10px 0;">
+                                      <input name="register_contact_phone_2<?php echo $i;?>" type="text" value="<?php echo $contact_row["user_telephone"];?>" />
+                                    <span class="style86" style="padding: 10px 0 10px 0;"></span>                                </span></span></td>
+                                    
+                                    <td valign="top">ตำแหน่ง</td>
+                                     <td valign="top"><span class="style86" style="padding: 10px 0 10px 0;"><span class="style86" style="padding: 10px 0 10px 0;">
+                                     
+                                     <span class="style86" style="padding: 10px 0 10px 0;"><span class="style86" style="padding: 10px 0 10px 0;">
+                                       <input name="register_position_2<?php echo $i;?>" type="text"  value="<?php echo $contact_row["user_position"];?>" />
+                                     <span class="style86" style="padding: 10px 0 10px 0;"></span>                                 </span></span>
+                                     
+                                     </td>
+                                  </tr>
+								  
+								  <?php }?>
+								  
+								 
+								  
                               
                               
                               <?php }?>
@@ -1323,9 +1406,9 @@
                           <td><hr />
                               <div align="center">
                               
-                              	<?php if($mode == "edit"){?>
+                              	<?php if($mode == "edit" ){?>
                                 
-									<?php if($required_doc){?>
+									<?php if($required_doc  ){?>
                                     
                                      <div align="center" style="padding: 5px;" id="register_bottom_message">
                                       		<font color="#FF6600">กรุณากรอกข้อมูล และแนบเอกสารที่มีเครื่องหมาย <img id="re01" src="exclaim_small.jpg" title="กรุณาแนบไฟล์"  height="15" /> ให้ครบถ้วน</font> - เจ้าหน้าที่จะอนุมัติผู้ใช้งานที่ข้อมูลครบถ้วนเท่านั้น
@@ -1333,13 +1416,28 @@
                                                             
                                       
                                     
-                                    <?php }elseif(!$no_pass && !$required_doc && $sess_user_enabled == "0"){?>
+                                    <?php }elseif(!$no_pass && !$required_doc && $sess_user_enabled == "0" ){?>
                                     
                                         <div align="center" style="padding: 5px;" id="register_bottom_message">
                                         		<font color="#009900">ระบบได้รับข้อมูลใบสมัครของท่านเรียบร้อยแล้ว</font> - กรุณารอการอนุมัติจากเจ้าหน้าที่ โดยจะมีอีเมล์แจ้งกลับไป สอบถามเพิ่มเติม 02-106-9300
+												
+												<br>
+												<font color=red style="font-size: 22px;">** กรุณาส่งเอกสารยืนยันตัวเองฉบับจริงเข้ามาให้เจ้าหน้าที่ <br>เจ้าหน้าที่จะไม่ทำการอนุมัติการใช้งานจนกว่าจะมีการส่งเอกสารยืนยันตัวเองฉบับจริงเข้ามา **</font>
                                          </div>
                                     
                                     <?php }?>
+									
+									
+									<?php if($sess_user_enabled == "9"){?>
+                                    
+                                        <div align="center" style="padding: 5px;" id="register_bottom_message">
+                                        		
+												<font color=red style="font-size: 22px;">** กรุณาทำการยืนยัน email จาก email ที่ทางระบบได้ส่งให้ท่าน<br>เจ้าหน้าที่จะไม่ทำการอนุมัติการใช้งานจนกว่าจะมีการทำการยืนยัน email **</font>
+                                         </div>
+                                    
+                                    <?php }?>
+									
+									
                                     
                                     
                                     <script>									  	
@@ -1520,9 +1618,23 @@
 							}
 														
 							
-
-
+							<?php if($mode == "add"){ ?> 
 							
+							if(frm.register_password.value.length < 1)
+							{
+								alert("กรุณาใส่ข้อมูล: รหัสผ่าน");
+								frm.register_password.focus();
+								return (false);
+							}
+							
+							if(frm.register_password.value != frm.register_password_2.value)
+							{
+								alert("กรุณาใส่ข้อมูล: ยืนยัน password ใหม่ไม่ถูกต้อง");
+								frm.register_password_2.focus();
+								return (false);
+							}
+							
+							<?php }?>
 							
 							
 							
@@ -1536,15 +1648,7 @@
 								frm.register_password.focus();
 								return (false);
 							}
-							
-							if(frm.register_password.value.length < 1)
-							{
-								alert("กรุณาใส่ข้อมูล: password");
-								frm.register_password.focus();
-								return (false);
-							}
 							<?php }?>
-							
 
 							if(frm.register_password.value != frm.register_password_2.value)
 							{
@@ -1552,8 +1656,6 @@
 								frm.register_password_2.focus();
 								return (false);
 							}
-							
-							
 							
 							
 							

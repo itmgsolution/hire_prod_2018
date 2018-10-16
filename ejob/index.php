@@ -51,9 +51,11 @@
                          </tr>
                          <tr>
                             <td colspan="2" align="right">
-                                <?php if($_GET["mode"] == "error_pass"){echo "invalid username or password!";}?>
+                                <?php if($_GET["mode"] == "error_pass"){echo "<font color=red>invalid username or password!</font>";}?>
                                 
-                                <?php if($_GET["mode"] == "pending"){echo "your account are pending approval.";}?> 
+                                <?php if($_GET["mode"] == "pending"){echo "<font color=red>your account are pending approval.</font>";}?>
+
+                                <?php if($_GET["mode"] == "disabled"){echo "<font color=red>บัญชีของท่านถูกระงับการใช้งาน</font>";}?>
                                 
                                 <input name="" type="submit" value="login" />  | <a href="view_register_password.php">ลืมรหัสผ่าน คลิกที่นี่</a>
                             </td>

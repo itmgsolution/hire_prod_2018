@@ -1,6 +1,9 @@
- <?php 							  
+
+ <?php
 		//yoes 20160301 only check dupe on non-dummy rows
-		if(!$post_row["curator_is_dummy_row"]){								
+		//yoes 20171130 and card_id !== 0
+
+		if(!$post_row["curator_is_dummy_row"] && $this_curator_idcard*1 != 0){								
   ?>
 	  
 	   <?php 
@@ -10,16 +13,28 @@
 								//see if this le_id already in another ID
 								
 								
-								$sql = "select * from lawful_employees_company
+								$sql = "select 
+											* 
+										from 
+											lawful_employees a
+											
+												join
+												company b
+												on
+												le_cid = cid												
+												and 
+												b.CompanyTypeCode < 200
+											
+											
 										where 
-										le_code = '$this_curator_idcard'
-										and 
-										le_year = '$this_lawful_year'
-										and
-										le_is_dummy_row = 0
+											le_code = '$this_curator_idcard'
+											and 
+											le_year = '$this_lawful_year'
+											and
+											le_is_dummy_row = 0
 										";
 							  
-								echo $sql;
+								//echo $sql;
 							  
 								$le_result = mysql_query($sql);
 								
