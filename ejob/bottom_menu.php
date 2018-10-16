@@ -1,0 +1,2 @@
+<hr />
+                    <div class="copyright" align="center" ><a href="#" style="font-size:10px;">Help</a> | <a href="#" style="font-size:10px;">About</a> | <a href="#" style="font-size:10px;">Contact</a> | © Copyright <?php echo date("Y");?> NEP</div>
